@@ -1,6 +1,6 @@
 {
     "name": "shkm/jsend",
-    "description": "A simple wrapper around the JSend specification.",
+    "description": "A simple PHP implementation of the JSend specification.",
     "keywords": ["json", "jsend"],
     "homepage": "https://github.com/shkm/jsend",
     "type": "library",
@@ -9,7 +9,7 @@
         {
             "name": "Jamie Schembri",
             "email": "jamie@schembri.me",
-            "homepage": "http://schembri.me",
+            "homepage": "http://schembri.me"
         }
     ],
     "require": {
