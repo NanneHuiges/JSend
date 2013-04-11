@@ -19,7 +19,7 @@ $fail = JSendResponse::fail($data);
 $error = JSendResponse::error('Not cool.', 9001, $data);
 ```
 
-**Note**: an `InvalidJSendException` is thrown is the status is invalid or if you're creating an `error` without a `message`.
+**Note**: an `InvalidJSendException` is thrown if the status is invalid or if you're creating an `error` without a `message`.
 
 ### Convert JSendResponse to JSON
 `__toString()` is overridden to encode JSON automatically.
