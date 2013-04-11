@@ -1,0 +1,189 @@
+<?php
+
+use JSend\JSendResponse;
+use JsonSchema\Validator;
+
+class JSendResponseTest extends PHPUnit_Framework_TestCase
+{
+    const SUCCESS = 'success';
+    const FAIL = 'fail';
+    const ERROR = 'error';
+
+    protected $data;
+    protected $errorMessage;
+    protected $errorCode;
+
+    protected $validator;
+
+    protected $success;
+    protected $fail;
+    protected $error;
+
+    protected $successWithData;
+    protected $failWithData;
+    protected $errorWithData;
+
+    public function setUp()
+    {
+        $this->data = array(
+            'user' => array(
+                'id' => 1,
+                'first_name' => 'foo',
+                'posts' => array(1, 5, 8),
+            ),
+        );
+        $this->errorMessage = 'error';
+        $this->errorCode = 42;
+
+        $this->success = JSendResponse::success();
+        $this->successWithData = JSendResponse::success($this->data);
+
+        $this->fail = JSendResponse::fail();
+        $this->failWithData = JSendResponse::fail($this->data);
+
+        $this->error = JSendResponse::error($this->errorMessage);
+        $this->errorWithData = JSendResponse::error($this->errorMessage, $this->errorCode, $this->data);
+
+        $this->validator = new Validator();
+    }
+
+    /**
+     * @expectedException JSend\InvalidJSendException
+     */
+    public function testThrowsExceptionIfStatusInvalid()
+    {
+        new JSendResponse('');
+    }
+
+    public function testSuccessHasCorrectStatus()
+    {
+        $this->assertEquals(self::SUCCESS, $this->success->getStatus());
+        $this->assertTrue($this->success->isSuccess());
+    }
+
+    public function testFailHasCorrectStatus()
+    {
+        $this->assertEquals(self::FAIL, $this->fail->getStatus());
+        $this->assertTrue($this->fail->isFail());
+    }
+
+    public function testErrorHasCorrectStatus()
+    {
+        $this->assertEquals(self::ERROR, $this->error->getStatus());
+        $this->assertTrue($this->error->isError());
+    }
+
+    public function testErrorHasCorrectMessage()
+    {
+        $this->assertEquals($this->errorMessage, $this->error->getErrorMessage());
+    }
+
+    public function testErrorHasCorrectCode()
+    {
+        $this->assertNull($this->error->getErrorCode());
+
+        $this->assertEquals($this->errorCode, $this->errorWithData->getErrorCode());
+    }
+
+    /**
+     * @expectedException BadMethodCallException
+     */
+    public function testSuccessHasNoErrorMessage()
+    {
+        $this->success->getErrorMessage();
+    }
+
+    /**
+     * @expectedException BadMethodCallException
+     */
+    public function testFailHasNoErrorMessage()
+    {
+        $this->fail->getErrorMessage();
+    }
+
+    public function testResponseHasCorrectData()
+    {
+        $this->assertEquals($this->data, $this->successWithData->getData());
+        $this->assertEquals($this->data, $this->failWithData->getData());
+        $this->assertEquals($this->data, $this->errorWithData->getData());
+    }
+
+    public function testResponseEncodesValidJson()
+    {
+        $this->assertNotNull($this->encodeAndDecode($this->success));
+        $this->assertNotNull($this->encodeAndDecode($this->fail));
+        $this->assertNotNull($this->encodeAndDecode($this->error));
+
+        $this->assertNotNull($this->encodeAndDecode($this->successWithData));
+        $this->assertNotNull($this->encodeAndDecode($this->failWithData));
+        $this->assertNotNull($this->encodeAndDecode($this->errorWithData));
+    }
+    public function testSuccessEncodesIdenticalJson()
+    {
+        // without data
+        $decoded = $this->encodeAndDecode($this->success);
+        $this->assertEquals(self::SUCCESS, $decoded['status']);
+        $this->assertEquals(null, $decoded['data']);
+        $this->assertArrayNotHasKey('message', $decoded);
+        $this->assertArrayNotHasKey('code', $decoded);
+
+        // with data
+        $decoded = $this->encodeAndDecode($this->successWithData);
+        $this->assertEquals($this->data, $decoded['data']);
+    }
+
+    public function testFailEncodesIdenticalJson()
+    {
+        // without data
+        $decoded = $this->encodeAndDecode($this->fail);
+        $this->assertEquals(self::FAIL, $decoded['status']);
+        $this->assertEquals(null, $decoded['data']);
+        $this->assertArrayNotHasKey('message', $decoded);
+        $this->assertArrayNotHasKey('code', $decoded);
+
+        // with data
+        $decoded = $this->encodeAndDecode($this->failWithData);
+        $this->assertEquals($this->data, $decoded['data']);
+    }
+
+    public function testErrorEncodesIdenticalJson()
+    {
+        // without data
+        $decoded = $this->encodeAndDecode($this->error);
+        $this->assertEquals(self::ERROR, $decoded['status']);
+        $this->assertArrayNotHasKey('data', $decoded);
+        $this->assertArrayNotHasKey('code', $decoded);
+
+        // with data
+        $decoded = $this->encodeAndDecode($this->errorWithData);
+
+        $this->assertEquals($this->data, $decoded['data']);
+        $this->assertEquals($this->errorMessage, $decoded['message']);
+        $this->assertEquals($this->errorCode, $decoded['code']);
+    }
+
+    protected function encodeAndDecode(JsendResponse $response)
+    {
+        $decodeToAssocArrays = true;
+        $encoded = $response->encode();
+        return json_decode($encoded, $decodeToAssocArrays);
+    }
+
+    public function testEncodingResponseToJsonAndBackToResponseReturnsIdenticalClass()
+    {
+        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->success));
+        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->fail));
+        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->error));
+
+        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->successWithData));
+        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->failWithData));
+        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->errorWithData));
+    }
+
+    protected function isEncodedAndDecodedBackIdentical(JSendResponse $jsend)
+    {
+        $json = $jsend->encode();
+        $recoded = JSendResponse::decode($json);
+        return $jsend == $recoded;
+    }
+}
