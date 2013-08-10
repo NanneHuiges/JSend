@@ -1,7 +1,6 @@
 <?php
 
 use JSend\JSendResponse;
-use JsonSchema\Validator;
 
 class JSendResponseTest extends PHPUnit_Framework_TestCase
 {
@@ -13,8 +12,6 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     protected $errorMessage;
     protected $errorCode;
 
-    protected $validator;
-
     protected $success;
     protected $fail;
     protected $error;
@@ -23,7 +20,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     protected $failWithData;
     protected $errorWithData;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->data = array(
             'user' => array(
@@ -32,6 +29,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
                 'posts' => array(1, 5, 8),
             ),
         );
+
         $this->errorMessage = 'error';
         $this->errorCode = 42;
 
@@ -42,13 +40,25 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $this->failWithData = JSendResponse::fail($this->data);
 
         $this->error = JSendResponse::error($this->errorMessage);
-        $this->errorWithData = JSendResponse::error($this->errorMessage, $this->errorCode, $this->data);
-
-        $this->validator = new Validator();
+        $this->errorWithData = JSendResponse::error(
+            $this->errorMessage, 
+            $this->errorCode, 
+            $this->data
+        );
     }
 
     /**
      * @expectedException JSend\InvalidJSendException
+     * @expectedExceptionMessage Errors must contain a message.
+     */
+    public function testCreatingErrorWithoutErrorMessageThrowsException()
+    {
+        $error = new JSendResponse('error', array());
+    }
+
+    /**
+     * @expectedException JSend\InvalidJSendException
+     * @expectedExceptionMessage Status does not conform to JSend spec.
      */
     public function testThrowsExceptionIfStatusInvalid()
     {
@@ -81,24 +91,25 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     public function testErrorHasCorrectCode()
     {
         $this->assertNull($this->error->getErrorCode());
-
         $this->assertEquals($this->errorCode, $this->errorWithData->getErrorCode());
     }
 
     /**
      * @expectedException BadMethodCallException
+     * @expectedExceptionMessage Only responses with a status of error may have an error message.
      */
-    public function testSuccessHasNoErrorMessage()
+    public function testGetErrorMessageThrowsExceptionIfStatusNotError()
     {
         $this->success->getErrorMessage();
     }
 
     /**
      * @expectedException BadMethodCallException
+     * @expectedExceptionMessage Only responses with a status of error may have an error code.
      */
-    public function testFailHasNoErrorMessage()
+    public function testGetErrorCodeThrowsExceptionIfStatusNotError()
     {
-        $this->fail->getErrorMessage();
+        $this->fail->getErrorCode();
     }
 
     public function testResponseHasCorrectData()
@@ -118,6 +129,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($this->encodeAndDecode($this->failWithData));
         $this->assertNotNull($this->encodeAndDecode($this->errorWithData));
     }
+
     public function testSuccessEncodesIdenticalJson()
     {
         // without data
@@ -130,6 +142,12 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         // with data
         $decoded = $this->encodeAndDecode($this->successWithData);
         $this->assertEquals($this->data, $decoded['data']);
+    }
+
+    public function test__toString()
+    {
+        $success = new JSendResponse('success', $this->data);
+        $this->assertEquals($success->encode(), (string) $success);
     }
 
     public function testFailEncodesIdenticalJson()
@@ -185,5 +203,41 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $json = $jsend->encode();
         $recoded = JSendResponse::decode($json);
         return $jsend == $recoded;
+    }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage JSON is invalid.
+     */
+    public function testDecodeInvalidJsonThrowsException()
+    {
+        JSendResponse::decode('This is not valid JSON, bro.');
+    }
+    
+    /**
+     * @expectedException JSend\InvalidJSendException
+     * @expectedExceptionMessage JSend must be an object with a valid status.
+     */
+    public function testDecodeMissingStatusKeyThrowsException()
+    {
+        JSendResponse::decode('{ "not-status": "Status A OK!" }');
+    }
+    
+    /**
+     * @expectedException JSend\InvalidJSendException
+     * @expectedExceptionMessage JSend must contain data unless it is an error.
+     */
+    public function testDecodeDataKeyMustExistIfNotError()
+    {
+        JSendResponse::decode('{ "status": "success" }');
+    }
+
+    /**
+     * @expectedException JSend\InvalidJSendException
+     * @expectedExceptionMessage JSend errors must contain a message.
+     */
+    public function testDecodeErrorMustHaveMessage()
+    {
+        JSendResponse::decode('{ "status": "error" }');
     }
 }
