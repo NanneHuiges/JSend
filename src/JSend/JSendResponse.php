@@ -148,7 +148,7 @@ class JSendResponse
         $rawDecode = json_decode($json, true, $depth, $options);
 
         if ($rawDecode === null) {
-            throw new UnexpectedValueException('JSON is invalid.');
+            throw new \UnexpectedValueException('JSON is invalid.');
         }
 
         if ((! is_array($rawDecode)) or (! array_key_exists('status', $rawDecode))) {
