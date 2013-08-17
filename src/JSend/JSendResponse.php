@@ -130,6 +130,16 @@ class JSendResponse
         return json_encode($toEncode);
     }
 
+    /**
+     * Encodes the class into JSON and sends it as a response with
+     * the 'application/json' header
+     */
+    public function respond()
+    {
+        header('Content-Type: application/json');
+        echo $this->encode();
+    }
+
     public function __toString()
     {
         return $this->encode();

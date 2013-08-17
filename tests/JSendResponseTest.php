@@ -240,4 +240,27 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     {
         JSendResponse::decode('{ "status": "error" }');
     }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testRespondSendsJson()
+    {
+        $this->success->respond();
+
+        $this->assertEquals($this->success->encode(), ob_get_contents());
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @requires extension xdebug
+     */
+    public function testRespondHasCorrectContentType()
+    {
+        $this->success->respond();
+        $headers = xdebug_get_headers();
+
+        $this->assertNotEmpty($headers);
+        $this->assertContains('Content-Type: application/json', $headers);
+    }
 }
