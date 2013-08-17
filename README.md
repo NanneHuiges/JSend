@@ -38,7 +38,15 @@ try {
 }
 ```
 
-### Doing something useful
+### Send JSON as HTTP Response
+This sets the `Content-Type` header to `application/json` and spits out the JSON.
+
+```php
+$jsend = newJSendResponse('success', $data);
+$jsend->respond();
+```
+
+### Get info
 ```php
 $isSuccess = $response->isSuccess();
 $isError = $response->isError();
