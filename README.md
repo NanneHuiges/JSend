@@ -42,7 +42,7 @@ try {
 This sets the `Content-Type` header to `application/json` and spits out the JSON.
 
 ```php
-$jsend = newJSendResponse('success', $data);
+$jsend = new JSendResponse('success', $data);
 $jsend->respond();
 ```
 
