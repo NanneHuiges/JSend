@@ -63,3 +63,7 @@ if ($response->isError()) {
     $message = $response->getErrorMessage;
 }
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/shkm/jsend/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
