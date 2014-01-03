@@ -103,7 +103,7 @@ class JSendResponse
      * Wrap the data with the Jsend specifications
      * @return array to encode
      */
-    public function wrap()
+    public function asArray()
     {
         $toEncode = array(
             'status' => $this->status,
@@ -136,7 +136,7 @@ class JSendResponse
      */
     public function encode()
     {
-        return json_encode($this->wrap());
+        return json_encode($this->asArray());
     }
 
     /**
