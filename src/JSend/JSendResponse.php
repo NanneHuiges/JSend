@@ -100,10 +100,10 @@ class JSendResponse
     }
 
     /**
-     * Encodes the class into JSON
-     * @return string the raw JSON
+     * Wrap the data with the Jsend specifications
+     * @return array to encode
      */
-    public function encode()
+    public function asArray()
     {
         $toEncode = array(
             'status' => $this->status,
@@ -127,7 +127,16 @@ class JSendResponse
             }
         }
 
-        return json_encode($toEncode);
+        return $toEncode;
+    }
+    
+    /**
+     * Encodes the class into JSON
+     * @return string the raw JSON
+     */
+    public function encode()
+    {
+        return json_encode($this->asArray());
     }
 
     /**
