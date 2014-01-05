@@ -53,6 +53,7 @@ $isError = $response->isError();
 $isFail = $response->isFail();
 $status = $response->getStatus();
 $data = $response->getData();
+$array = $response->asArray();
 ```
 
 Additionally, you can call the following methods on an error. A `BadMethodCallException` is thrown if the status is not `error`, so check first.
