@@ -100,34 +100,43 @@ class JSendResponse
     }
 
     /**
+     * Serializes the class into an array
+     * @return array the serialized array
+     */
+    public function asArray()
+    {
+        $theArray = array(
+            'status' => $this->status,
+        );
+
+        if ($this->data) {
+            $theArray['data'] = $this->data;
+        } else {
+            if (! $this->isError()) {
+                // Data is optional for errors, so it should not be set
+                // rather than be null.
+                $theArray['data'] = null;
+            }
+        }
+
+        if ($this->isError()) {
+            $theArray['message'] = (string) $this->errorMessage;
+
+            if (! empty($this->errorCode)) {
+                $theArray['code'] = (int) $this->errorCode;
+            }
+        }
+
+        return $theArray;
+    }
+
+    /**
      * Encodes the class into JSON
      * @return string the raw JSON
      */
     public function encode()
     {
-        $toEncode = array(
-            'status' => $this->status,
-        );
-
-        if ($this->data) {
-            $toEncode['data'] = $this->data;
-        } else {
-            if (! $this->isError()) {
-                // Data is optional for errors, so it should not be set
-                // rather than be null.
-                $toEncode['data'] = null;
-            }
-        }
-
-        if ($this->isError()) {
-            $toEncode['message'] = (string) $this->errorMessage;
-
-            if (! empty($this->errorCode)) {
-                $toEncode['code'] = (int) $this->errorCode;
-            }
-        }
-
-        return json_encode($toEncode);
+        return json_encode($this->asArray());
     }
 
     /**

@@ -130,6 +130,53 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($this->encodeAndDecode($this->errorWithData));
     }
 
+    public function testAsArrayHasCorrectData()
+    {
+        $successAsArray = $this->success->asArray();
+        $this->assertEquals(
+            $this->success->getStatus(),
+            $successAsArray['status']
+        );
+        $this->assertEquals(
+            $this->success->getData(),
+            $successAsArray['data']
+        );
+
+        $successWithDataAsArray = $this->successWithData->asArray();
+        $this->assertEquals(
+            $this->successWithData->getStatus(),
+            $successWithDataAsArray['status']
+        );
+        $this->assertEquals(
+            $this->successWithData->getData(),
+            $successWithDataAsArray['data']
+        );
+
+        $successAsArray = $this->successWithData->asArray();
+        $this->assertEquals(
+            $this->successWithData->getStatus(),
+            $successAsArray['status']
+        );
+        $this->assertEquals(
+            $this->successWithData->getData(),
+            $successAsArray['data']
+        );
+
+        $errorAsArray = $this->errorWithData->asArray();
+        $this->assertEquals(
+            $this->errorWithData->getStatus(),
+            $errorAsArray['status']
+        );
+        $this->assertEquals(
+            $this->errorWithData->getErrorMessage(),
+            $errorAsArray['message']
+        );
+        $this->assertEquals(
+            $this->errorWithData->getErrorCode(),
+            $errorAsArray['code']
+        );
+    }
+
     public function testSuccessEncodesIdenticalJson()
     {
         // without data
