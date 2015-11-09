@@ -1,7 +1,7 @@
 <?php
 namespace JSend;
 
-class JSendResponse
+class JSendResponse implements \JsonSerializable
 {
     const SUCCESS = 'success';
     const FAIL = 'fail';
@@ -136,7 +136,16 @@ class JSendResponse
      */
     public function encode()
     {
-        return json_encode($this->asArray());
+        return json_encode($this);
+    }
+
+    /**
+     * Implements JsonSerializable interface
+     * @return array
+     */
+    function jsonSerialize()
+    {
+        return $this->asArray();
     }
 
     /**
@@ -147,11 +156,6 @@ class JSendResponse
     {
         header('Content-Type: application/json');
         echo $this->encode();
-    }
-
-    public function __toString()
-    {
-        return $this->encode();
     }
 
     /**
