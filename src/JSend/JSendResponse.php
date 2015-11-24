@@ -158,13 +158,17 @@ class JSendResponse
      * Takes raw JSON (JSend) and builds it into a new JSendResponse
      * @param string $json the raw JSON (JSend) to decode
      * @see json_decode()
-     * @throws UnexpectedValueException if JSON is invalid
+     * @throws \UnexpectedValueException if JSON is invalid
      * @throws InvalidJSendException if JSend does not conform to spec
      * @return JSendResponse the response created from the JSON
      */
     public static function decode($json, $depth = 512, $options = 0)
     {
-        $rawDecode = json_decode($json, true, $depth, $options);
+        if (version_compare(phpversion(), '5.4', '>=')) {
+            $rawDecode = json_decode($json, true, $depth, $options);
+        } else {
+            $rawDecode = json_decode($json, true, $depth);
+        }
 
         if ($rawDecode === null) {
             throw new \UnexpectedValueException('JSON is invalid.');
