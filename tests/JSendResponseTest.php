@@ -310,4 +310,13 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $this->assertNotEmpty($headers);
         $this->assertContains('Content-Type: application/json', $headers);
     }
+
+    public function testExtending(){
+        $extended = Extended::success();
+        $this->assertInstanceOf('Extended', $extended);
+    }
+}
+
+class Extended extends JSendResponse{
+
 }

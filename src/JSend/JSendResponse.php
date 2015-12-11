@@ -14,17 +14,17 @@ class JSendResponse
 
     public static function success(array $data = null)
     {
-        return new self(self::SUCCESS, $data);
+        return new static(static::SUCCESS, $data);
     }
 
     public static function fail(array $data = null)
     {
-        return new self(self::FAIL, $data);
+        return new static(static::FAIL, $data);
     }
 
     public static function error($errorMessage, $errorCode = null, array $data = null)
     {
-        return new self(self::ERROR, $data, $errorMessage, $errorCode);
+        return new static(static::ERROR, $data, $errorMessage, $errorCode);
     }
 
     public function __construct($status, array $data = null, $errorMessage = null, $errorCode = null)
@@ -34,7 +34,7 @@ class JSendResponse
         }
         $this->status = $status;
 
-        if ($status === self::ERROR)
+        if ($status === static::ERROR)
         {
             if (empty($errorMessage))
             {
@@ -79,24 +79,24 @@ class JSendResponse
 
     protected function isStatusValid($status)
     {
-        $validStatuses = array(self::SUCCESS, self::FAIL, self::ERROR);
+        $validStatuses = array(static::SUCCESS, static::FAIL, static::ERROR);
 
         return in_array($status, $validStatuses);
     }
 
     public function isSuccess()
     {
-        return $this->status === self::SUCCESS;
+        return $this->status === static::SUCCESS;
     }
 
     public function isFail()
     {
-        return $this->status === self::FAIL;
+        return $this->status === static::FAIL;
     }
 
     public function isError()
     {
-        return $this->status === self::ERROR;
+        return $this->status === static::ERROR;
     }
 
     /**
@@ -180,7 +180,7 @@ class JSendResponse
         $errorMessage = array_key_exists('message', $rawDecode) ? $rawDecode['message'] : null;
         $errorCode = array_key_exists('code', $rawDecode) ? $rawDecode['code'] : null;
 
-        if ($status === self::ERROR) {
+        if ($status === static::ERROR) {
             if ($errorMessage === null) {
                 throw new InvalidJSendException('JSend errors must contain a message.');
             }
@@ -188,7 +188,7 @@ class JSendResponse
             throw new InvalidJSendException('JSend must contain data unless it is an error.');
         }
 
-        return new self($status, $data, $errorMessage, $errorCode);
+        return new static($status, $data, $errorMessage, $errorCode);
 
     }
 }
