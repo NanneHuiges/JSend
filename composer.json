@@ -10,11 +10,6 @@
             "name": "Nanne Huiges",
             "email": "nanne@huiges.nl",
             "role": "Current maintainer"
-        },
-        {
-            "name": "Jamie Schembri",
-            "email": "jamie@schembri.me",
-            "homepage": "http://schembri.me"
         }
     ],
     "require": {
