@@ -64,3 +64,5 @@ if ($response->isError()) {
     $message = $response->getErrorMessage;
 }
 ```
+# Credits
+The library was written by [Jamie Schembri](https://github.com/shkm). It has been transfered to the current account [Nanne Huiges](https://github.com/NanneHuiges) in december 2015.
