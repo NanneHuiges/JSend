@@ -1,5 +1,5 @@
 {
-    "name": "NanneHuiges/jsend",
+    "name": "nannehuiges/jsend",
     "description": "A simple PHP implementation of the JSend specification.",
     "keywords": ["json", "jsend"],
     "homepage": "https://github.com/NanneHuiges/jsend",
