@@ -1,8 +1,8 @@
 {
-    "name": "shkm/jsend",
+    "name": "NanneHuiges/jsend",
     "description": "A simple PHP implementation of the JSend specification.",
     "keywords": ["json", "jsend"],
-    "homepage": "https://github.com/shkm/jsend",
+    "homepage": "https://github.com/NanneHuiges/jsend",
     "type": "library",
     "license": "BSD-3-Clause",
     "authors": [
@@ -10,6 +10,11 @@
             "name": "Jamie Schembri",
             "email": "jamie@schembri.me",
             "homepage": "http://schembri.me"
+        },
+        {
+            "name": "Nanne Huiges",
+            "email": "nanne@huiges.nl",
+            "role": "Current maintainer"
         }
     ],
     "require": {
