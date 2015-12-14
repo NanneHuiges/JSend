@@ -12,32 +12,72 @@ class JSendResponse
     protected $errorCode;
     protected $errorMessage;
 
+    /**
+     * From the spec:
+     * Description: All went well, and (usually) some data was returned.
+     * Required   :  data
+     *
+     * @param array|null $data
+     *
+     * @return static
+     */
     public static function success(array $data = null)
     {
         return new static(static::SUCCESS, $data);
     }
 
+    /**
+     * From the spec:
+     * Description: There was a problem with the data submitted, or some pre-condition of the API call wasn't satisfied
+     * Required   : data
+     *
+     * @param array|null $data
+     *
+     * @return static
+     */
     public static function fail(array $data = null)
     {
         return new static(static::FAIL, $data);
     }
 
+    /**
+     * From the spec:
+     * Description: An error occurred in processing the request, i.e. an exception was thrown
+     * Required   : errorMessage
+     * Optional   : errorCode, data
+     *
+     * @param            $errorMessage
+     * @param null       $errorCode
+     * @param array|null $data
+     *
+     * @return static
+     *
+     * @throws InvalidJSendException if empty($errorMessage) is true
+     */
     public static function error($errorMessage, $errorCode = null, array $data = null)
     {
         return new static(static::ERROR, $data, $errorMessage, $errorCode);
     }
 
+    /**
+     * JSendResponse constructor.
+     *
+     * @param string      $status       one of static::SUCCESS, static::FAIL, static::ERROR
+     * @param array|null  $data
+     * @param string|null $errorMessage mandatory for errors
+     * @param string|null $errorCode
+     *
+     * @throws InvalidJSendException if status is not valid or status is error and empty($errorMessage) is true
+     */
     public function __construct($status, array $data = null, $errorMessage = null, $errorCode = null)
     {
-        if (! $this->isStatusValid($status)) {
+        if (!$this->isStatusValid($status)) {
             throw new InvalidJSendException('Status does not conform to JSend spec.');
         }
         $this->status = $status;
 
-        if ($status === static::ERROR)
-        {
-            if (empty($errorMessage))
-            {
+        if ($status === static::ERROR) {
+            if (empty($errorMessage)) {
                 throw new InvalidJSendException('Errors must contain a message.');
             }
             $this->errorMessage = $errorMessage;
@@ -112,7 +152,7 @@ class JSendResponse
         if ($this->data) {
             $theArray['data'] = $this->data;
         } else {
-            if (! $this->isError()) {
+            if (!$this->isError()) {
                 // Data is optional for errors, so it should not be set
                 // rather than be null.
                 $theArray['data'] = null;
@@ -120,10 +160,10 @@ class JSendResponse
         }
 
         if ($this->isError()) {
-            $theArray['message'] = (string) $this->errorMessage;
+            $theArray['message'] = (string)$this->errorMessage;
 
-            if (! empty($this->errorCode)) {
-                $theArray['code'] = (int) $this->errorCode;
+            if (!empty($this->errorCode)) {
+                $theArray['code'] = (int)$this->errorCode;
             }
         }
 
@@ -156,11 +196,14 @@ class JSendResponse
 
     /**
      * Takes raw JSON (JSend) and builds it into a new JSendResponse
-     * @param string $json the raw JSON (JSend) to decode
-     * @see json_decode()
-     * @throws \UnexpectedValueException if JSON is invalid
+     *
+     * @param string $json    the raw JSON (JSend) to decode
+     * @param int    $depth   User specified recursion depth, defaults to 512
+     * @param int    $options Bitmask of JSON decode options. (only for php >= 5.4)
+     *
+     * @return JSendResponse if JSON is invalid
      * @throws InvalidJSendException if JSend does not conform to spec
-     * @return JSendResponse the response created from the JSON
+     * @see json_decode()
      */
     public static function decode($json, $depth = 512, $options = 0)
     {
@@ -174,7 +217,7 @@ class JSendResponse
             throw new \UnexpectedValueException('JSON is invalid.');
         }
 
-        if ((! is_array($rawDecode)) or (! array_key_exists('status', $rawDecode))) {
+        if ((!is_array($rawDecode)) or (!array_key_exists('status', $rawDecode))) {
             throw new InvalidJSendException(
                 'JSend must be an object with a valid status.');
         }
@@ -188,7 +231,7 @@ class JSendResponse
             if ($errorMessage === null) {
                 throw new InvalidJSendException('JSend errors must contain a message.');
             }
-        } elseif (! array_key_exists('data', $rawDecode)) {
+        } elseif (!array_key_exists('data', $rawDecode)) {
             throw new InvalidJSendException('JSend must contain data unless it is an error.');
         }
 
@@ -197,4 +240,4 @@ class JSendResponse
     }
 }
 
-class InvalidJSendException extends \Exception { };
+class InvalidJSendException extends \Exception{}

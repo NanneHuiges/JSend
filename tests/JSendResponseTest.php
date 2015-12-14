@@ -41,8 +41,8 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
 
         $this->error = JSendResponse::error($this->errorMessage);
         $this->errorWithData = JSendResponse::error(
-            $this->errorMessage, 
-            $this->errorCode, 
+            $this->errorMessage,
+            $this->errorCode,
             $this->data
         );
     }
@@ -194,7 +194,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     public function test__toString()
     {
         $success = new JSendResponse('success', $this->data);
-        $this->assertEquals($success->encode(), (string) $success);
+        $this->assertEquals($success->encode(), (string)$success);
     }
 
     public function testFailEncodesIdenticalJson()
@@ -260,7 +260,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     {
         JSendResponse::decode('This is not valid JSON, bro.');
     }
-    
+
     /**
      * @expectedException JSend\InvalidJSendException
      * @expectedExceptionMessage JSend must be an object with a valid status.
@@ -269,7 +269,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     {
         JSendResponse::decode('{ "not-status": "Status A OK!" }');
     }
-    
+
     /**
      * @expectedException JSend\InvalidJSendException
      * @expectedExceptionMessage JSend must contain data unless it is an error.
@@ -311,12 +311,14 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $this->assertContains('Content-Type: application/json', $headers);
     }
 
-    public function testExtending(){
+    public function testExtending()
+    {
         $extended = Extended::success();
         $this->assertInstanceOf('Extended', $extended);
     }
 }
 
-class Extended extends JSendResponse{
+class Extended extends JSendResponse
+{
 
 }
