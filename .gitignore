@@ -3,3 +3,7 @@ vendor/
 composer.lock
 Guardfile
 build
+
+
+#phpstorm
+.idea/
