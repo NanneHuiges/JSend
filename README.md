@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/NanneHuiges/JSend.svg)](https://travis-ci.org/NanneHuiges/JSend)
+
 # JSend
 A simple PHP implementation of the [JSend specification](http://labs.omniti.com/labs/jsend).
 
