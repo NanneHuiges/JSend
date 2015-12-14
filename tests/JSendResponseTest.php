@@ -197,6 +197,12 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($success->encode(), (string)$success);
     }
 
+    public function testJsonSerializable()
+    {
+        $success = new JSendResponse('success', $this->data);
+        $this->assertEquals($success->encode(), json_encode($success));
+    }
+
     public function testFailEncodesIdenticalJson()
     {
         // without data
