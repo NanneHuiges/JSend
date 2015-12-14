@@ -16,8 +16,8 @@
         "php": ">=5.3.0"
     },
     "require-dev": {
-        "justinrainbow/json-schema": "1.4.*@dev",
-        "phpunit/phpunit": ">=3.7"
+        "justinrainbow/json-schema": "~1.5",
+        "phpunit/phpunit": "~4.8"
     },
     "autoload": {
         "psr-0": {
