@@ -113,8 +113,7 @@ class JSendResponse implements \JsonSerializable
             return $this->errorCode;
         }
 
-        throw new \BadMethodCallException(
-            'Only responses with a status of error may have an error code.');
+        throw new \BadMethodCallException('Only responses with a status of error may have an error code.');
     }
 
     protected function isStatusValid($status)
@@ -183,7 +182,7 @@ class JSendResponse implements \JsonSerializable
      * Implements JsonSerializable interface
      * @return array
      */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return $this->asArray();
     }
@@ -223,8 +222,7 @@ class JSendResponse implements \JsonSerializable
         }
 
         if ((!is_array($rawDecode)) or (!array_key_exists('status', $rawDecode))) {
-            throw new InvalidJSendException(
-                'JSend must be an object with a valid status.');
+            throw new InvalidJSendException('JSend must be an object with a valid status.');
         }
 
         $status = $rawDecode['status'];
@@ -244,5 +242,3 @@ class JSendResponse implements \JsonSerializable
 
     }
 }
-
-class InvalidJSendException extends \Exception{}
