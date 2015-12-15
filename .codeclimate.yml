@@ -13,7 +13,9 @@ engines:
     enabled: true
 ratings:
   paths:
-  - "**.php"
+  - "src/**"
 exclude_paths:
-  - "tests/*.php"
-  - "tests/JSendResponseTest.php"
+- "tests/**"
+- "tests/*"
+- "tests/*.php"
+- "tests/JSendResponseTest.php"
