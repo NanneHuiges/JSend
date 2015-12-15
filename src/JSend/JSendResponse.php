@@ -149,12 +149,11 @@ class JSendResponse implements \JsonSerializable
 
         if ($this->data) {
             $theArray['data'] = $this->data;
-        } else {
-            if (!$this->isError()) {
-                // Data is optional for errors, so it should not be set
-                // rather than be null.
-                $theArray['data'] = null;
-            }
+        }
+        if (!$this->data && !$this->isError()) {
+            // Data is optional for errors, so it should not be set
+            // rather than be null.
+            $theArray['data'] = null;
         }
 
         if ($this->isError()) {
