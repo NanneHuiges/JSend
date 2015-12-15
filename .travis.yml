@@ -3,8 +3,14 @@ language: php
 php:
     - 5.5
     - 5.4
-    - 5.3
 
 before_script: composer install
 
 script: phpunit --configuration phpunit.xml
+after_script:
+  - vendor/bin/test-reporter
+
+addons:
+  code_climate:
+    repo_token:
+      secure: "PUOX6j6EfG711db/d5VNKeRFZszxZqQCnH9ftqNdfkPvvtYqWZ3XxlzMbvqJcfjsTol2dSwI58GT/ALPej+MeWtKfE3lCF180he45km1f79xx4lkJ8TYU488p8LpnBdetOUalHLwCXhQTQzQf6DXMt2UaxKjX3RlVez6rr72eaZbiapEMjYkUwKsAXwlP7W7tgn/K+Z1fTfk+5I+1XpMlFp3bwFluUXA0Y3T9XsI1LVxcpz38fNEXSQbHpiNJcCsDua1qNYPfDfTjsHvRPaY4ROyelxTUJNB8CpBympSiykJHJ1WDdNCQJmbPXfwy4IcbaZ0WDaXnOX0LT+NlmmcgEeH9V3el6KHpvkHU9kUmVcQxH8LfskCTHMhEDwqY6vHBEjleCvjRmJlv4+NVdK9bshElYWCYnAxAzOQvAZv24RV74kS455Ni++pS/aHuwEeJm/SGG5EbIlumDFn7/tljHVxx6UYN/bx72TD1aHcJhgSaISbP/SrfRJ4QuWSjKtylhf27t/8R+V2Zm3Y+n2abGpk7HvqF9zLDlOEreRwPc6emCBaygiyXRj8PhF/bRc8gfP0aeFvlAw/GC6PBfJBAqrtcz/9Mg1x4YYUhdFce+yBQQldc6VlytYWRCLvZfJtcEJGhOl9qLTY4hZLrK+DoKRNMfnc/bBT+V1+o/zEoBI="

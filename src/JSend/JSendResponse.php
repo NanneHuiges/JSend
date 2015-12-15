@@ -188,6 +188,11 @@ class JSendResponse implements \JsonSerializable
         return $this->asArray();
     }
 
+    public function __toString()
+    {
+        return $this->encode();
+    }
+
     /**
      * Encodes the class into JSON and sends it as a response with
      * the 'application/json' header
