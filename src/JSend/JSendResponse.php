@@ -103,8 +103,7 @@ class JSendResponse implements \JsonSerializable
             return $this->errorMessage;
         }
 
-        throw new \BadMethodCallException(
-            'Only responses with a status of error may have an error message.');
+        throw new \BadMethodCallException('Only responses with a status of error may have an error message.');
     }
 
     public function getErrorCode()
@@ -230,11 +229,10 @@ class JSendResponse implements \JsonSerializable
         $errorMessage = array_key_exists('message', $rawDecode) ? $rawDecode['message'] : null;
         $errorCode = array_key_exists('code', $rawDecode) ? $rawDecode['code'] : null;
 
-        if ($status === static::ERROR) {
-            if ($errorMessage === null) {
-                throw new InvalidJSendException('JSend errors must contain a message.');
-            }
-        } elseif (!array_key_exists('data', $rawDecode)) {
+        if ($status === static::ERROR && $errorMessage === null) {
+            throw new InvalidJSendException('JSend errors must contain a message.');
+        }
+        if ($status !== static::ERROR && !array_key_exists('data', $rawDecode)) {
             throw new InvalidJSendException('JSend must contain data unless it is an error.');
         }
 

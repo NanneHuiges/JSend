@@ -2,6 +2,10 @@
 
 use JSend\JSendResponse;
 
+/**
+ * Using static factory methods is / should be allowed.
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class JSendResponseTest extends PHPUnit_Framework_TestCase
 {
     const SUCCESS = 'success';
@@ -53,7 +57,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
      */
     public function testCreatingErrorWithoutErrorMessageThrowsException()
     {
-        $error = new JSendResponse('error', array());
+        new JSendResponse('error', array());
     }
 
     /**
