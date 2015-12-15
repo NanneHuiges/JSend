@@ -1,8 +1,7 @@
-[![Build Status](https://travis-ci.org/NanneHuiges/JSend.svg)](https://travis-ci.org/NanneHuiges/JSend)
-[![Test Coverage](https://codeclimate.com/github/NanneHuiges/JSend/badges/coverage.svg)](https://codeclimate.com/github/NanneHuiges/JSend/coverage)
-
-[![Code Climate](https://codeclimate.com/github/NanneHuiges/JSend/badges/gpa.svg)](https://codeclimate.com/github/NanneHuiges/JSend)
-[![Issue Count](https://codeclimate.com/github/NanneHuiges/JSend/badges/issue_count.svg)](https://codeclimate.com/github/NanneHuiges/JSend)
+[![Build Status](https://travis-ci.org/NanneHuiges/JSend.svg)](https://travis-ci.org/NanneHuiges/JSend)  
+[![Test Coverage](https://codeclimate.com/github/NanneHuiges/JSend/badges/coverage.svg)](https://codeclimate.com/github/NanneHuiges/JSend/coverage)  
+[![Code Climate](https://codeclimate.com/github/NanneHuiges/JSend/badges/gpa.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
+[![Issue Count](https://codeclimate.com/github/NanneHuiges/JSend/badges/issue_count.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
 
 # JSend
 A simple PHP implementation of the [JSend specification](http://labs.omniti.com/labs/jsend).
