@@ -5,7 +5,7 @@ php:
 before_script: composer install --dev
 script: phpunit --configuration phpunit.xml
 after_script:
-- vendor/bin/test-reporter
+- ./codeclimate.sh
 
 addons:
   code_climate:
