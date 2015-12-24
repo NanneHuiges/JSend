@@ -319,6 +319,7 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
      */
     public function testRespondHasCorrectContentType()
     {
+        $this->expectOutputString($this->success->encode());
         $this->success->respond();
         $headers = xdebug_get_headers();
 
