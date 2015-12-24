@@ -34,6 +34,20 @@ $json = $success->encode();
 $json = (string) $success;
 ```
 
+As JSendResponse is `JsonSerializable`, you can use the object directly in `json_encode`
+
+```php
+json_encode($success);
+```
+
+#### Setting flags
+You can set flags if needed:
+
+```php
+$success->setEncodingOptions(\JSON_PRETTY_PRINT | \JSON_BIGINT_AS_STRING);
+$json = $success->encode();
+```
+
 ### Convert JSON to JSendResponse
 ```php
 try {
