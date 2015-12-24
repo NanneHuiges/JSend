@@ -16,12 +16,18 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
     protected $errorMessage;
     protected $errorCode;
 
+    /** @var  JSendResponse */
     protected $success;
+    /** @var  JSendResponse */
     protected $fail;
+    /** @var  JSendResponse */
     protected $error;
 
+    /** @var  JSendResponse */
     protected $successWithData;
+    /** @var  JSendResponse */
     protected $failWithData;
+    /** @var  JSendResponse */
     protected $errorWithData;
 
     protected function setUp()
@@ -303,9 +309,8 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
      */
     public function testRespondSendsJson()
     {
-        $this->success->respond();
-
-        $this->assertEquals($this->success->encode(), ob_get_contents());
+       $this->expectOutputString($this->success->encode());
+       $this->success->respond();
     }
 
     /**
@@ -326,6 +331,15 @@ class JSendResponseTest extends PHPUnit_Framework_TestCase
         $extended = Extended::success();
         $this->assertInstanceOf('Extended', $extended);
     }
+
+    public function testAddingEncodeOptions(){
+        $success = JSendResponse::success(array('some'=>'data'));
+        $success->setEncodingOptions(\JSON_PRETTY_PRINT);
+        $result = $success->encode();
+        $pretty = json_encode($success->asArray(), \JSON_PRETTY_PRINT);
+        $this->assertEquals($pretty, $result);
+    }
+
 }
 
 class Extended extends JSendResponse

@@ -12,6 +12,9 @@ class JSendResponse implements \JsonSerializable
     protected $errorCode;
     protected $errorMessage;
 
+    /** @var int  */
+    protected $json_encode_options = 0;
+
     /**
      * From the spec:
      * Description: All went well, and (usually) some data was returned.
@@ -167,13 +170,19 @@ class JSendResponse implements \JsonSerializable
         return $theArray;
     }
 
+    public function setEncodingOptions($options)
+    {
+        $this->json_encode_options = $options;
+    }
+
+
     /**
      * Encodes the class into JSON
      * @return string the raw JSON
      */
     public function encode()
     {
-        return json_encode($this);
+        return json_encode($this, $this->json_encode_options);
     }
 
     /**
