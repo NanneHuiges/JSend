@@ -7,11 +7,14 @@ class JSendResponse implements \JsonSerializable
     const FAIL = 'fail';
     const ERROR = 'error';
 
+    /** @var string */
     protected $status;
+    /** @var array|null  */
     protected $data;
+    /** @var null|string  */
     protected $errorCode;
+    /** @var null|string  */
     protected $errorMessage;
-
     /** @var int  */
     protected $json_encode_options = 0;
 
@@ -22,9 +25,10 @@ class JSendResponse implements \JsonSerializable
      *
      * @param array|null $data
      *
-     * @return static
+     * @return JSendResponse
+     * @throws InvalidJSendException
      */
-    public static function success(array $data = null)
+    public static function success(array $data = null): JSendResponse
     {
         return new static(static::SUCCESS, $data);
     }
@@ -36,9 +40,10 @@ class JSendResponse implements \JsonSerializable
      *
      * @param array|null $data
      *
-     * @return static
+     * @return JSendResponse
+     * @throws InvalidJSendException
      */
-    public static function fail(array $data = null)
+    public static function fail(array $data = null): JSendResponse
     {
         return new static(static::FAIL, $data);
     }
@@ -49,15 +54,15 @@ class JSendResponse implements \JsonSerializable
      * Required   : errorMessage
      * Optional   : errorCode, data
      *
-     * @param            $errorMessage
-     * @param null       $errorCode
-     * @param array|null $data
+     * @param string      $errorMessage
+     * @param string|null $errorCode
+     * @param array|null  $data
      *
-     * @return static
+     * @return JSendResponse
      *
      * @throws InvalidJSendException if empty($errorMessage) is true
      */
-    public static function error($errorMessage, $errorCode = null, array $data = null)
+    public static function error(string $errorMessage, string $errorCode = null, array $data = null): JSendResponse
     {
         return new static(static::ERROR, $data, $errorMessage, $errorCode);
     }
@@ -72,7 +77,7 @@ class JSendResponse implements \JsonSerializable
      *
      * @throws InvalidJSendException if status is not valid or status is error and empty($errorMessage) is true
      */
-    public function __construct($status, array $data = null, $errorMessage = null, $errorCode = null)
+    public function __construct(string $status, array $data = null, $errorMessage = null, $errorCode = null)
     {
         if (!$this->isStatusValid($status)) {
             throw new InvalidJSendException('Status does not conform to JSend spec.');
@@ -90,16 +95,22 @@ class JSendResponse implements \JsonSerializable
         $this->data = $data;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
+    /**
+     * @return array|null
+     */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * @return null|string
+     */
     public function getErrorMessage()
     {
         if ($this->isError()) {
@@ -109,6 +120,9 @@ class JSendResponse implements \JsonSerializable
         throw new \BadMethodCallException('Only responses with a status of error may have an error message.');
     }
 
+    /**
+     * @return null|string
+     */
     public function getErrorCode()
     {
         if ($this->isError()) {
@@ -118,24 +132,24 @@ class JSendResponse implements \JsonSerializable
         throw new \BadMethodCallException('Only responses with a status of error may have an error code.');
     }
 
-    protected function isStatusValid($status)
+    protected function isStatusValid(string $status): bool
     {
         $validStatuses = array(static::SUCCESS, static::FAIL, static::ERROR);
 
-        return in_array($status, $validStatuses);
+        return \in_array($status, $validStatuses, true);
     }
 
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return $this->status === static::SUCCESS;
     }
 
-    public function isFail()
+    public function isFail(): bool
     {
         return $this->status === static::FAIL;
     }
 
-    public function isError()
+    public function isError(): bool
     {
         return $this->status === static::ERROR;
     }
@@ -144,11 +158,9 @@ class JSendResponse implements \JsonSerializable
      * Serializes the class into an array
      * @return array the serialized array
      */
-    public function asArray()
+    public function asArray(): array
     {
-        $theArray = array(
-            'status' => $this->status,
-        );
+        $theArray = ['status' => $this->status];
 
         if ($this->data) {
             $theArray['data'] = $this->data;
@@ -180,7 +192,7 @@ class JSendResponse implements \JsonSerializable
      * Encodes the class into JSON
      * @return string the raw JSON
      */
-    public function encode()
+    public function encode(): string
     {
         return json_encode($this, $this->json_encode_options);
     }
@@ -194,6 +206,9 @@ class JSendResponse implements \JsonSerializable
         return $this->asArray();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->encode();
@@ -220,7 +235,7 @@ class JSendResponse implements \JsonSerializable
      * @throws InvalidJSendException if JSend does not conform to spec
      * @see json_decode()
      */
-    public static function decode($json, $depth = 512, $options = 0)
+    public static function decode($json, $depth = 512, $options = 0): JSendResponse
     {
         $rawDecode = json_decode($json, true, $depth, $options);
 
@@ -228,14 +243,14 @@ class JSendResponse implements \JsonSerializable
             throw new \UnexpectedValueException('JSON is invalid.');
         }
 
-        if ((!is_array($rawDecode)) or (!array_key_exists('status', $rawDecode))) {
+        if ((!\is_array($rawDecode)) || (!array_key_exists('status', $rawDecode))) {
             throw new InvalidJSendException('JSend must be an object with a valid status.');
         }
 
         $status = $rawDecode['status'];
-        $data = array_key_exists('data', $rawDecode) ? $rawDecode['data'] : null;
-        $errorMessage = array_key_exists('message', $rawDecode) ? $rawDecode['message'] : null;
-        $errorCode = array_key_exists('code', $rawDecode) ? $rawDecode['code'] : null;
+        $data = $rawDecode['data'] ?? null;
+        $errorMessage = $rawDecode['message'] ?? null;
+        $errorCode = $rawDecode['code'] ?? null;
 
         if ($status === static::ERROR && $errorMessage === null) {
             throw new InvalidJSendException('JSend errors must contain a message.');
