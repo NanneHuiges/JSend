@@ -245,6 +245,5 @@ class JSendResponse implements \JsonSerializable
         }
 
         return new static($status, $data, $errorMessage, $errorCode);
-
     }
 }

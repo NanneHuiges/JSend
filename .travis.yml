@@ -1,13 +1,10 @@
 language: php
 php:
-- 7.2
-- 7.1
-- 7.0
 - 5.5
 - 5.4
 before_script: composer install --dev
 script: phpunit --configuration phpunit.xml
 after_script:
-  - CODECLIMATE_REPO_TOKEN="15813799526ee16462ebffc4f7f45d8692e07e002287190bc414dd1ba548dc41" vendor/bin/test-reporter
+  - if [ $(phpenv version-name) = "5.5" ]; then CODECLIMATE_REPO_TOKEN="15813799526ee16462ebffc4f7f45d8692e07e002287190bc414dd1ba548dc41" vendor/bin/test-reporter; fi
 
 
