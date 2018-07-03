@@ -1,0 +1,8 @@
+version: "2"
+services:
+  jsend-dev:
+    env_file: .user.env
+    build:
+      context: ./docker/jsend-dev
+    volumes:
+      - .:/usr/src

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+cd "${BASH_SOURCE%/*}/.." || exit
+
+if [[ $# -eq 0 ]]; then
+  docker run \
+    --interactive --tty --rm \
+    --env CODECLIMATE_CODE="$PWD" \
+    --volume "$PWD":/code \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    --volume /tmp/cc:/tmp/cc \
+    codeclimate/codeclimate analyze
+else
+  docker run \
+    --interactive --tty --rm \
+    --env CODECLIMATE_CODE="$PWD" \
+    --volume "$PWD":/code \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    --volume /tmp/cc:/tmp/cc \
+    codeclimate/codeclimate "${@:1}"
+fi
+
+

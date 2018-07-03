@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd "${BASH_SOURCE%/*}/.." || exit
+
+if [[ $# -eq 0 ]]; then
+  docker-compose run --rm jsend-dev infection --threads=4
+else
+  docker-compose run --rm jsend-dev infection "${@:1}"
+fi
