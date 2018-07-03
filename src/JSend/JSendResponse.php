@@ -100,12 +100,18 @@ class JSendResponse implements \JsonSerializable
         return $this->status;
     }
 
-    public function getData(): ?array
+    /**
+     * @return array|null
+     */
+    public function getData()
     {
         return $this->data;
     }
 
-    public function getErrorMessage(): ?string
+    /**
+     * @return null|string
+     */
+    public function getErrorMessage()
     {
         if ($this->isError()) {
             return $this->errorMessage;
@@ -114,7 +120,10 @@ class JSendResponse implements \JsonSerializable
         throw new \BadMethodCallException('Only responses with a status of error may have an error message.');
     }
 
-    public function getErrorCode(): ?string
+    /**
+     * @return null|string
+     */
+    public function getErrorCode()
     {
         if ($this->isError()) {
             return $this->errorCode;
@@ -127,7 +136,7 @@ class JSendResponse implements \JsonSerializable
     {
         $validStatuses = array(static::SUCCESS, static::FAIL, static::ERROR);
 
-        return in_array($status, $validStatuses, true);
+        return \in_array($status, $validStatuses, true);
     }
 
     public function isSuccess(): bool
@@ -173,7 +182,7 @@ class JSendResponse implements \JsonSerializable
         return $theArray;
     }
 
-    public function setEncodingOptions($options): void
+    public function setEncodingOptions($options)
     {
         $this->json_encode_options = $options;
     }
@@ -197,6 +206,9 @@ class JSendResponse implements \JsonSerializable
         return $this->asArray();
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->encode();
@@ -206,7 +218,7 @@ class JSendResponse implements \JsonSerializable
      * Encodes the class into JSON and sends it as a response with
      * the 'application/json' header
      */
-    public function respond(): void
+    public function respond()
     {
         header('Content-Type: application/json');
         echo $this->encode();
@@ -231,14 +243,14 @@ class JSendResponse implements \JsonSerializable
             throw new \UnexpectedValueException('JSON is invalid.');
         }
 
-        if ((!is_array($rawDecode)) or (!array_key_exists('status', $rawDecode))) {
+        if ((!\is_array($rawDecode)) || (!array_key_exists('status', $rawDecode))) {
             throw new InvalidJSendException('JSend must be an object with a valid status.');
         }
 
         $status = $rawDecode['status'];
-        $data = array_key_exists('data', $rawDecode) ? $rawDecode['data'] : null;
-        $errorMessage = array_key_exists('message', $rawDecode) ? $rawDecode['message'] : null;
-        $errorCode = array_key_exists('code', $rawDecode) ? $rawDecode['code'] : null;
+        $data = $rawDecode['data'] ?? null;
+        $errorMessage = $rawDecode['message'] ?? null;
+        $errorCode = $rawDecode['code'] ?? null;
 
         if ($status === static::ERROR && $errorMessage === null) {
             throw new InvalidJSendException('JSend errors must contain a message.');
