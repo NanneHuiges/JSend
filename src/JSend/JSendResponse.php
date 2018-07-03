@@ -3,9 +3,9 @@ namespace JSend;
 
 class JSendResponse implements \JsonSerializable
 {
-    public const SUCCESS = 'success';
-    public const FAIL = 'fail';
-    public const ERROR = 'error';
+    const SUCCESS = 'success';
+    const FAIL = 'fail';
+    const ERROR = 'error';
 
     /** @var string */
     protected $status;
