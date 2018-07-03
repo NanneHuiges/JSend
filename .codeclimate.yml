@@ -11,6 +11,11 @@ engines:
     enabled: true
   phpmd:
     enabled: true
+plugins:
+  phan:
+    enabled: true
+    config:
+      file_extensions: "php"
 ratings:
   paths:
   - "src/**"
