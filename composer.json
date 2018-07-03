@@ -13,11 +13,10 @@
         }
     ],
     "require": {
-        "php": ">=7.1"
+        "php": ">=7.0"
     },
     "require-dev": {
-        "justinrainbow/json-schema": "~1.5",
-        "phpunit/phpunit": "~4.8",
+        "phpunit/phpunit": "^7",
         "codeclimate/php-test-reporter": "dev-master"
     },
     "autoload": {
