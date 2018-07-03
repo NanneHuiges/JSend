@@ -8,4 +8,6 @@ php:
 before_script: composer install --dev
 script: phpunit --configuration phpunit.xml
 after_script:
-- ./codeclimate.sh
+  - CODECLIMATE_REPO_TOKEN="15813799526ee16462ebffc4f7f45d8692e07e002287190bc414dd1ba548dc41" vendor/bin/test-reporter
+
+
