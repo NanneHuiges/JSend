@@ -1,5 +1,5 @@
 ---
-engines:
+plugins:
   duplication:
     enabled: true
     config:
@@ -11,6 +11,10 @@ engines:
     enabled: true
   phpmd:
     enabled: true
+  phan:
+    enabled: true
+    config:
+      file_extensions: "php"
 ratings:
   paths:
   - "src/**"
