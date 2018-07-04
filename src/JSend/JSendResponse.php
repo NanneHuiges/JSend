@@ -7,6 +7,11 @@ class JSendResponse implements \JsonSerializable
     const FAIL = 'fail';
     const ERROR = 'error';
 
+    const KEY_STATUS = 'status';
+    const KEY_DATA = 'data';
+    const KEY_MESSAGE = 'message';
+    const KEY_CODE = 'code';
+
     /** @var string */
     protected $status;
     /** @var array|null  */
@@ -160,22 +165,22 @@ class JSendResponse implements \JsonSerializable
      */
     public function asArray(): array
     {
-        $theArray = ['status' => $this->status];
+        $theArray = [static::KEY_STATUS => $this->status];
 
         if ($this->data) {
-            $theArray['data'] = $this->data;
+            $theArray[static::KEY_DATA] = $this->data;
         }
         if (!$this->data && !$this->isError()) {
             // Data is optional for errors, so it should not be set
             // rather than be null.
-            $theArray['data'] = null;
+            $theArray[static::KEY_DATA] = null;
         }
 
         if ($this->isError()) {
-            $theArray['message'] = (string)$this->errorMessage;
+            $theArray[static::KEY_MESSAGE] = (string)$this->errorMessage;
 
             if (!empty($this->errorCode)) {
-                $theArray['code'] = (int)$this->errorCode;
+                $theArray[static::KEY_CODE] = (int)$this->errorCode;
             }
         }
 
@@ -243,19 +248,19 @@ class JSendResponse implements \JsonSerializable
             throw new \UnexpectedValueException('JSON is invalid.');
         }
 
-        if ((!\is_array($rawDecode)) || (!array_key_exists('status', $rawDecode))) {
+        if ((!\is_array($rawDecode)) || (!array_key_exists(static::KEY_STATUS, $rawDecode))) {
             throw new InvalidJSendException('JSend must be an object with a valid status.');
         }
 
-        $status = $rawDecode['status'];
-        $data = $rawDecode['data'] ?? null;
-        $errorMessage = $rawDecode['message'] ?? null;
-        $errorCode = $rawDecode['code'] ?? null;
+        $status = $rawDecode[static::KEY_STATUS];
+        $data = $rawDecode[static::KEY_DATA] ?? null;
+        $errorMessage = $rawDecode[static::KEY_DATA] ?? null;
+        $errorCode = $rawDecode[static::KEY_CODE] ?? null;
 
         if ($status === static::ERROR && $errorMessage === null) {
             throw new InvalidJSendException('JSend errors must contain a message.');
         }
-        if ($status !== static::ERROR && !array_key_exists('data', $rawDecode)) {
+        if ($status !== static::ERROR && !array_key_exists(static::KEY_DATA, $rawDecode)) {
             throw new InvalidJSendException('JSend must contain data unless it is an error.');
         }
 
