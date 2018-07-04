@@ -185,6 +185,7 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
             $this->errorWithData->getErrorCode(),
             $errorAsArray['code']
         );
+        $this->assertInternalType("int", $errorAsArray['code']);
     }
 
     public function testSuccessEncodesIdenticalJson()
