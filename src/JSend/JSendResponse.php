@@ -254,7 +254,7 @@ class JSendResponse implements \JsonSerializable
 
         $status = $rawDecode[static::KEY_STATUS];
         $data = $rawDecode[static::KEY_DATA] ?? null;
-        $errorMessage = $rawDecode[static::KEY_DATA] ?? null;
+        $errorMessage = $rawDecode[static::KEY_MESSAGE] ?? null;
         $errorCode = $rawDecode[static::KEY_CODE] ?? null;
 
         if ($status === static::ERROR && $errorMessage === null) {
