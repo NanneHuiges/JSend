@@ -1,4 +1,8 @@
----
+version: "2"
+checks:
+  method-complexity:
+    config:
+      threshold: 6
 plugins:
   duplication:
     enabled: true
@@ -7,20 +11,24 @@ plugins:
       - php
   fixme:
     enabled: true
-  phpcodesniffer:
-    enabled: true
-  phpmd:
-    enabled: true
   phan:
     enabled: true
     config:
       file_extensions: "php"
-ratings:
-  paths:
-  - "src/**"
-exclude_paths:
-- "tests/**"
-- "tests/*"
-- "tests/*.php"
-- "tests/JSendResponseTest.php"
-- "vendor/**"
+  phpcodesniffer:
+    enabled: true
+  phpmd:
+    enabled: true
+    config:
+      file_extensions:
+        - php
+        - inc
+      rulesets: "cleancode,controversial,design,naming,unusedcode,phpmd_ruleset.xml"
+  sonar-php:
+    enabled: true
+    config:
+      minimum_severity: info
+exclude_patterns:
+- "tests/"
+- "vendor/"
+- ".idea/"

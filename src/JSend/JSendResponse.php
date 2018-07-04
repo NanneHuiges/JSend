@@ -16,7 +16,7 @@ class JSendResponse implements \JsonSerializable
     /** @var null|string  */
     protected $errorMessage;
     /** @var int  */
-    protected $json_encode_options = 0;
+    protected $jsonEncodeOptions = 0;
 
     /**
      * From the spec:
@@ -184,7 +184,7 @@ class JSendResponse implements \JsonSerializable
 
     public function setEncodingOptions($options)
     {
-        $this->json_encode_options = $options;
+        $this->jsonEncodeOptions = $options;
     }
 
 
@@ -194,7 +194,7 @@ class JSendResponse implements \JsonSerializable
      */
     public function encode(): string
     {
-        return json_encode($this, $this->json_encode_options);
+        return json_encode($this, $this->jsonEncodeOptions);
     }
 
     /**
