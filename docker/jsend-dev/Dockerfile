@@ -42,13 +42,13 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
   && php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" \
   && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer  && rm -rf /tmp/composer-setup.php
 
-# parallelize composer
-RUN composer global require "hirak/prestissimo" --no-progress
+
+
+RUN composer global require infection/infection
 
 # loosen up composer cache because other users need to access it later
 RUN chmod -R 777 /var/lib/composer/cache
 
-RUN composer global require infection/infection
 
 COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
