@@ -279,6 +279,18 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * The `""` string is valid JSON, but not valid for JSend.
+     * It should not throw the same exception as invalid JSON.
+     *
+     * @expectedException JSend\InvalidJSendException
+     * @expectedExceptionMessage JSend must be an object with a valid status.
+     */
+    public function testDecodeEmptyStringThrowsRightException()
+    {
+        JSendResponse::decode('""');
+    }
+
+    /**
      * @expectedException JSend\InvalidJSendException
      * @expectedExceptionMessage JSend must be an object with a valid status.
      */
@@ -303,6 +315,23 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
     public function testDecodeErrorMustHaveMessage()
     {
         JSendResponse::decode('{ "status": "error" }');
+    }
+
+    /**
+     * This test exposes some inconsistency in the library
+     * There are double 'safety' tests for wrong input, in this case checking if we do have a message.
+     * An empty message will NOT fail in the decode function but will fail in the constructor.
+     * Currently this constructor has a different Exception message, that we test for here
+     *
+     * This is probably a hint that the 2 different spots that actually test for this need to
+     * become a single line of code.
+     *
+     * @expectedException JSend\InvalidJSendException
+     * @expectedExceptionMessage Errors must contain a message.
+     */
+    public function testDecodeErrorAnEmptyStringShouldNotBeValid()
+    {
+        JSendResponse::decode('{ "status": "error", "message": "" }');
     }
 
     /**
