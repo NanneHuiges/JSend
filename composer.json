@@ -1,7 +1,7 @@
 {
     "name": "nannehuiges/jsend",
     "description": "A simple PHP implementation of the JSend specification.",
-    "keywords": ["json", "jsend"],
+    "keywords": ["jsend", "json", "php"],
     "homepage": "https://github.com/NanneHuiges/jsend",
     "type": "library",
     "license": "BSD-3-Clause",
@@ -16,8 +16,7 @@
         "php": ">=7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6",
-        "codeclimate/php-test-reporter": "dev-master"
+        "phpunit/phpunit": "^6"
     },
     "autoload": {
         "psr-0": {
