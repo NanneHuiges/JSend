@@ -8,9 +8,12 @@ before_script:
  - if [ $(phpenv version-name) = "7.0" ]; then wget https://github.com/infection/infection/releases/download/0.9.0/infection.phar; fi
  - if [ $(phpenv version-name) = "7.0" ]; then wget https://github.com/infection/infection/releases/download/0.9.0/infection.phar.pubkey; fi
  - if [ $(phpenv version-name) = "7.0" ]; then chmod +x infection.phar; fi
+ - if [ $(phpenv version-name) = "7.0" ]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+ - if [ $(phpenv version-name) = "7.0" ]; then chmod +x ./cc-test-reporter; fi
+ - if [ $(phpenv version-name) = "7.0" ]; then ./cc-test-reporter before-build; fi
 script:
  - phpunit --configuration phpunit.xml
  - if [ $(phpenv version-name) = "7.0" ]; then ./infection.phar --min-msi=78 --min-covered-msi=78 --threads=4; fi
 after_script:
- - if [ $(phpenv version-name) = "7.0" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then vendor/bin/test-reporter -v; fi
+ - if [ $(phpenv version-name) = "7.0" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 
