@@ -30,7 +30,7 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
     /** @var  JSendResponse */
     protected $errorWithData;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->data = array(
             'user' => array(
@@ -58,20 +58,20 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException JSend\InvalidJSendException
-     * @expectedExceptionMessage Errors must contain a message.
+	 * Trying to create an error without a message should throw an exception
      */
     public function testCreatingErrorWithoutErrorMessageThrowsException()
     {
+    	$this->expectException(\JSend\InvalidJSendException::class);
         new JSendResponse('error', array());
     }
 
     /**
-     * @expectedException JSend\InvalidJSendException
      * @expectedExceptionMessage Status does not conform to JSend spec.
      */
     public function testThrowsExceptionIfStatusInvalid()
     {
+		$this->expectException(\JSend\InvalidJSendException::class);
         new JSendResponse('');
     }
 
@@ -105,21 +105,21 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException BadMethodCallException
      * @expectedExceptionMessage Only responses with a status of error may have an error message.
      */
     public function testGetErrorMessageThrowsExceptionIfStatusNotError()
     {
-        $this->success->getErrorMessage();
+		$this->expectException(BadMethodCallException::class);
+		$this->success->getErrorMessage();
     }
 
     /**
-     * @expectedException BadMethodCallException
      * @expectedExceptionMessage Only responses with a status of error may have an error code.
      */
     public function testGetErrorCodeThrowsExceptionIfStatusNotError()
     {
-        $this->fail->getErrorCode();
+		$this->expectException(BadMethodCallException::class);
+		$this->fail->getErrorCode();
     }
 
     public function testResponseHasCorrectData()
@@ -185,7 +185,7 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
             $this->errorWithData->getErrorCode(),
             $errorAsArray['code']
         );
-        $this->assertInternalType("int", $errorAsArray['code']);
+        $this->assertIsInt($errorAsArray['code']);
     }
 
     public function testSuccessEncodesIdenticalJson()
@@ -270,51 +270,49 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage JSON is invalid.
+	 * Test that we throw an invalid value exception on invalid json
      */
     public function testDecodeInvalidJsonThrowsException()
     {
-        JSendResponse::decode('This is not valid JSON, bro.');
+		$this->expectException(\UnexpectedValueException::class);
+		JSendResponse::decode('This is not valid JSON.');
     }
 
     /**
      * The `""` string is valid JSON, but not valid for JSend.
      * It should not throw the same exception as invalid JSON.
-     *
-     * @expectedException JSend\InvalidJSendException
-     * @expectedExceptionMessage JSend must be an object with a valid status.
      */
     public function testDecodeEmptyStringThrowsRightException()
     {
-        JSendResponse::decode('""');
+		$this->expectException(\JSend\InvalidJSendException::class);
+		JSendResponse::decode('""');
     }
 
     /**
-     * @expectedException JSend\InvalidJSendException
-     * @expectedExceptionMessage JSend must be an object with a valid status.
+     * JSend must be an object with a valid status.
      */
     public function testDecodeMissingStatusKeyThrowsException()
     {
-        JSendResponse::decode('{ "not-status": "Status A OK!" }');
+		$this->expectException(\JSend\InvalidJSendException::class);
+		JSendResponse::decode('{ "not-status": "Status A OK!" }');
     }
 
     /**
-     * @expectedException JSend\InvalidJSendException
-     * @expectedExceptionMessage JSend must contain data unless it is an error.
+     * JSend must contain data unless it is an error.
      */
     public function testDecodeDataKeyMustExistIfNotError()
     {
-        JSendResponse::decode('{ "status": "success" }');
+		$this->expectException(\JSend\InvalidJSendException::class);
+		JSendResponse::decode('{ "status": "success" }');
     }
 
     /**
-     * @expectedException JSend\InvalidJSendException
-     * @expectedExceptionMessage JSend errors must contain a message.
+     * JSend errors must contain a message.
      */
     public function testDecodeErrorMustHaveMessage()
     {
-        JSendResponse::decode('{ "status": "error" }');
+		$this->expectException(\JSend\InvalidJSendException::class);
+		JSendResponse::decode('{ "status": "error" }');
     }
 
     /**
@@ -326,12 +324,11 @@ class JSendResponseTest extends \PHPUnit\Framework\TestCase
      * This is probably a hint that the 2 different spots that actually test for this need to
      * become a single line of code.
      *
-     * @expectedException JSend\InvalidJSendException
-     * @expectedExceptionMessage Errors must contain a message.
      */
     public function testDecodeErrorAnEmptyStringShouldNotBeValid()
     {
-        JSendResponse::decode('{ "status": "error", "message": "" }');
+		$this->expectException(\JSend\InvalidJSendException::class);
+		JSendResponse::decode('{ "status": "error", "message": "" }');
     }
 
     /**

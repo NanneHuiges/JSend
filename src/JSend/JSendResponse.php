@@ -3,14 +3,14 @@ namespace JSend;
 
 class JSendResponse implements \JsonSerializable
 {
-    const SUCCESS = 'success';
-    const FAIL = 'fail';
-    const ERROR = 'error';
+    public const SUCCESS = 'success';
+	public const FAIL = 'fail';
+	public const ERROR = 'error';
 
-    const KEY_STATUS = 'status';
-    const KEY_DATA = 'data';
-    const KEY_MESSAGE = 'message';
-    const KEY_CODE = 'code';
+	public const KEY_STATUS = 'status';
+	public const KEY_DATA = 'data';
+	public const KEY_MESSAGE = 'message';
+	public const KEY_CODE = 'code';
 
     /** @var string */
     protected $status;
@@ -108,16 +108,16 @@ class JSendResponse implements \JsonSerializable
     /**
      * @return array|null
      */
-    public function getData()
-    {
+    public function getData(): ?array
+	{
         return $this->data;
     }
 
     /**
      * @return null|string
      */
-    public function getErrorMessage()
-    {
+    public function getErrorMessage(): ?string
+	{
         if ($this->isError()) {
             return $this->errorMessage;
         }
@@ -128,8 +128,8 @@ class JSendResponse implements \JsonSerializable
     /**
      * @return null|string
      */
-    public function getErrorCode()
-    {
+    public function getErrorCode(): ?string
+	{
         if ($this->isError()) {
             return $this->errorCode;
         }
@@ -187,8 +187,8 @@ class JSendResponse implements \JsonSerializable
         return $theArray;
     }
 
-    public function setEncodingOptions($options)
-    {
+    public function setEncodingOptions($options): void
+	{
         $this->jsonEncodeOptions = $options;
     }
 
@@ -223,8 +223,8 @@ class JSendResponse implements \JsonSerializable
      * Encodes the class into JSON and sends it as a response with
      * the 'application/json' header
      */
-    public function respond()
-    {
+    public function respond(): void
+	{
         header('Content-Type: application/json');
         echo $this->encode();
     }
