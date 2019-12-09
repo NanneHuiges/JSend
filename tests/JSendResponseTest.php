@@ -59,11 +59,11 @@ class JSendResponseTest extends TestCase
     }
 
     /**
-	 * Trying to create an error without a message should throw an exception
+     * Trying to create an error without a message should throw an exception
      */
     public function testCreatingErrorWithoutErrorMessageThrowsException()
     {
-    	$this->expectException(\JSend\InvalidJSendException::class);
+        $this->expectException(\JSend\InvalidJSendException::class);
         new JSendResponse('error', array());
     }
 
@@ -72,7 +72,7 @@ class JSendResponseTest extends TestCase
      */
     public function testThrowsExceptionIfStatusInvalid()
     {
-		$this->expectException(\JSend\InvalidJSendException::class);
+        $this->expectException(\JSend\InvalidJSendException::class);
         new JSendResponse('');
     }
 
@@ -110,8 +110,8 @@ class JSendResponseTest extends TestCase
      */
     public function testGetErrorMessageThrowsExceptionIfStatusNotError()
     {
-		$this->expectException(BadMethodCallException::class);
-		$this->success->getErrorMessage();
+        $this->expectException(BadMethodCallException::class);
+        $this->success->getErrorMessage();
     }
 
     /**
@@ -119,8 +119,8 @@ class JSendResponseTest extends TestCase
      */
     public function testGetErrorCodeThrowsExceptionIfStatusNotError()
     {
-		$this->expectException(BadMethodCallException::class);
-		$this->fail->getErrorCode();
+        $this->expectException(BadMethodCallException::class);
+        $this->fail->getErrorCode();
     }
 
     public function testResponseHasCorrectData()
@@ -271,12 +271,12 @@ class JSendResponseTest extends TestCase
     }
 
     /**
-	 * Test that we throw an invalid value exception on invalid json
+     * Test that we throw an invalid value exception on invalid json
      */
     public function testDecodeInvalidJsonThrowsException()
     {
-		$this->expectException(\UnexpectedValueException::class);
-		JSendResponse::decode('This is not valid JSON.');
+        $this->expectException(\UnexpectedValueException::class);
+        JSendResponse::decode('This is not valid JSON.');
     }
 
     /**
@@ -285,8 +285,8 @@ class JSendResponseTest extends TestCase
      */
     public function testDecodeEmptyStringThrowsRightException()
     {
-		$this->expectException(\JSend\InvalidJSendException::class);
-		JSendResponse::decode('""');
+        $this->expectException(\JSend\InvalidJSendException::class);
+        JSendResponse::decode('""');
     }
 
     /**
@@ -294,8 +294,8 @@ class JSendResponseTest extends TestCase
      */
     public function testDecodeMissingStatusKeyThrowsException()
     {
-		$this->expectException(\JSend\InvalidJSendException::class);
-		JSendResponse::decode('{ "not-status": "Status A OK!" }');
+        $this->expectException(\JSend\InvalidJSendException::class);
+        JSendResponse::decode('{ "not-status": "Status A OK!" }');
     }
 
     /**
@@ -303,8 +303,8 @@ class JSendResponseTest extends TestCase
      */
     public function testDecodeDataKeyMustExistIfNotError()
     {
-		$this->expectException(\JSend\InvalidJSendException::class);
-		JSendResponse::decode('{ "status": "success" }');
+        $this->expectException(\JSend\InvalidJSendException::class);
+        JSendResponse::decode('{ "status": "success" }');
     }
 
     /**
@@ -312,8 +312,8 @@ class JSendResponseTest extends TestCase
      */
     public function testDecodeErrorMustHaveMessage()
     {
-		$this->expectException(\JSend\InvalidJSendException::class);
-		JSendResponse::decode('{ "status": "error" }');
+        $this->expectException(\JSend\InvalidJSendException::class);
+        JSendResponse::decode('{ "status": "error" }');
     }
 
     /**
@@ -328,8 +328,8 @@ class JSendResponseTest extends TestCase
      */
     public function testDecodeErrorAnEmptyStringShouldNotBeValid()
     {
-		$this->expectException(\JSend\InvalidJSendException::class);
-		JSendResponse::decode('{ "status": "error", "message": "" }');
+        $this->expectException(\JSend\InvalidJSendException::class);
+        JSendResponse::decode('{ "status": "error", "message": "" }');
     }
 
     /**
@@ -337,8 +337,8 @@ class JSendResponseTest extends TestCase
      */
     public function testRespondSendsJson()
     {
-       $this->expectOutputString($this->success->encode());
-       $this->success->respond();
+        $this->expectOutputString($this->success->encode());
+        $this->success->respond();
     }
 
     /**
@@ -361,8 +361,9 @@ class JSendResponseTest extends TestCase
         $this->assertInstanceOf('Extended', $extended);
     }
 
-    public function testAddingEncodeOptions(){
-        $success = JSendResponse::success(array('some'=>'data'));
+    public function testAddingEncodeOptions()
+    {
+        $success = JSendResponse::success(array('some' => 'data'));
         $success->setEncodingOptions(\JSON_PRETTY_PRINT);
         $result = $success->encode();
         $pretty = json_encode($success->asArray(), \JSON_PRETTY_PRINT);

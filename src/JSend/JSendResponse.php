@@ -1,4 +1,5 @@
 <?php
+
 namespace JSend;
 
 use BadMethodCallException;
@@ -8,23 +9,23 @@ use UnexpectedValueException;
 class JSendResponse implements JsonSerializable
 {
     public const SUCCESS = 'success';
-	public const FAIL = 'fail';
-	public const ERROR = 'error';
+    public const FAIL = 'fail';
+    public const ERROR = 'error';
 
-	public const KEY_STATUS = 'status';
-	public const KEY_DATA = 'data';
-	public const KEY_MESSAGE = 'message';
-	public const KEY_CODE = 'code';
+    public const KEY_STATUS = 'status';
+    public const KEY_DATA = 'data';
+    public const KEY_MESSAGE = 'message';
+    public const KEY_CODE = 'code';
 
     /** @var string */
     protected $status;
-    /** @var array|null  */
+    /** @var array|null */
     protected $data;
-    /** @var null|string  */
+    /** @var null|string */
     protected $errorCode;
-    /** @var null|string  */
+    /** @var null|string */
     protected $errorMessage;
-    /** @var int  */
+    /** @var int */
     protected $jsonEncodeOptions = 0;
 
     /**
@@ -63,9 +64,9 @@ class JSendResponse implements JsonSerializable
      * Required   : errorMessage
      * Optional   : errorCode, data
      *
-     * @param string      $errorMessage
+     * @param string $errorMessage
      * @param string|null $errorCode
-     * @param array|null  $data
+     * @param array|null $data
      *
      * @return JSendResponse
      *
@@ -79,8 +80,8 @@ class JSendResponse implements JsonSerializable
     /**
      * JSendResponse constructor.
      *
-     * @param string      $status       one of static::SUCCESS, static::FAIL, static::ERROR
-     * @param array|null  $data
+     * @param string $status one of static::SUCCESS, static::FAIL, static::ERROR
+     * @param array|null $data
      * @param string|null $errorMessage mandatory for errors
      * @param string|null $errorCode
      *
@@ -113,7 +114,7 @@ class JSendResponse implements JsonSerializable
      * @return array|null
      */
     public function getData(): ?array
-	{
+    {
         return $this->data;
     }
 
@@ -121,7 +122,7 @@ class JSendResponse implements JsonSerializable
      * @return null|string
      */
     public function getErrorMessage(): ?string
-	{
+    {
         if ($this->isError()) {
             return $this->errorMessage;
         }
@@ -133,7 +134,7 @@ class JSendResponse implements JsonSerializable
      * @return null|string
      */
     public function getErrorCode(): ?string
-	{
+    {
         if ($this->isError()) {
             return $this->errorCode;
         }
@@ -192,7 +193,7 @@ class JSendResponse implements JsonSerializable
     }
 
     public function setEncodingOptions($options): void
-	{
+    {
         $this->jsonEncodeOptions = $options;
     }
 
@@ -228,7 +229,7 @@ class JSendResponse implements JsonSerializable
      * the 'application/json' header
      */
     public function respond(): void
-	{
+    {
         header('Content-Type: application/json');
         echo $this->encode();
     }
@@ -236,9 +237,9 @@ class JSendResponse implements JsonSerializable
     /**
      * Takes raw JSON (JSend) and builds it into a new JSendResponse
      *
-     * @param string $json    the raw JSON (JSend) to decode
-     * @param int    $depth   User specified recursion depth, defaults to 512
-     * @param int    $options Bitmask of JSON decode options.
+     * @param string $json the raw JSON (JSend) to decode
+     * @param int $depth User specified recursion depth, defaults to 512
+     * @param int $options Bitmask of JSON decode options.
      *
      * @return JSendResponse if JSON is invalid
      * @throws InvalidJSendException if JSend does not conform to spec
