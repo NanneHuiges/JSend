@@ -1,7 +1,11 @@
 <?php
 namespace JSend;
 
-class JSendResponse implements \JsonSerializable
+use BadMethodCallException;
+use JsonSerializable;
+use UnexpectedValueException;
+
+class JSendResponse implements JsonSerializable
 {
     public const SUCCESS = 'success';
 	public const FAIL = 'fail';
@@ -122,7 +126,7 @@ class JSendResponse implements \JsonSerializable
             return $this->errorMessage;
         }
 
-        throw new \BadMethodCallException('Only responses with a status of error may have an error message.');
+        throw new BadMethodCallException('Only responses with a status of error may have an error message.');
     }
 
     /**
@@ -134,7 +138,7 @@ class JSendResponse implements \JsonSerializable
             return $this->errorCode;
         }
 
-        throw new \BadMethodCallException('Only responses with a status of error may have an error code.');
+        throw new BadMethodCallException('Only responses with a status of error may have an error code.');
     }
 
     protected function isStatusValid(string $status): bool
@@ -245,7 +249,7 @@ class JSendResponse implements \JsonSerializable
         $rawDecode = json_decode($json, true, $depth, $options);
 
         if ($rawDecode === null) {
-            throw new \UnexpectedValueException('JSON is invalid.');
+            throw new UnexpectedValueException('JSON is invalid.');
         }
 
         if ((!\is_array($rawDecode)) || (!array_key_exists(static::KEY_STATUS, $rawDecode))) {

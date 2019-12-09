@@ -1,12 +1,13 @@
 <?php
 
 use JSend\JSendResponse;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Using static factory methods is / should be allowed.
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class JSendResponseTest extends \PHPUnit\Framework\TestCase
+class JSendResponseTest extends TestCase
 {
     const SUCCESS = 'success';
     const FAIL = 'fail';
