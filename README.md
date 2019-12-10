@@ -83,5 +83,31 @@ if ($response->isError()) {
     $message = $response->getErrorMessage;
 }
 ```
+
+# Development
+For your convenience, there is a dockerfile with the right dependencies (php, composer) available. Please use those
+to run various things (composer, phpunit, etc). You will need `docker` and `docker-compose` installed, but you don't
+need `PHP` or `composer`.
+
+## Setting up your install
+Running `./install.sh` will run composer for you in a development container. It does some magic with a `.user.env`
+file that will make sure you run all the stuff as your local user. This will help with access to the generated files.
+
+You can run `./bin/composer` if you want to do any `composer` things, like `composer update`. If that takes to long each 
+time, you can jump in a shell by using `./bin/shell`. This makes sure you always run your build (or test) commands in 
+the right environment.
+
+## Testing and code quality
+There are scripts in `/bin` to help you test for issues:
+
+* codeclimate: run various codeclimate checks, like phpcodesniffer, phan, etc. See `.codeclimate.yml`
+* phpunit: runs the testsuite
+
+These tests are run on the CI as well, but please make sure they don't fail before you do a PR
+
+## Notes
+* Note that the `composer.lock` file is ignored. This is standard practice for libraries.
+* The current tests are done on php 7.2, but tests are for 7.3 and 7.4 as well
+
 # Credits
 The library was written by [Jamie Schembri](https://github.com/shkm). It has been transfered to the current account [Nanne Huiges](https://github.com/NanneHuiges) in december 2015.
