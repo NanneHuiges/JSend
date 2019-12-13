@@ -64,16 +64,7 @@ class JSendResponseTest extends TestCase
     public function testCreatingErrorWithoutErrorMessageThrowsException()
     {
         $this->expectException(\JSend\InvalidJSendException::class);
-        new JSendResponse('error', array());
-    }
-
-    /**
-     * @expectedExceptionMessage Status does not conform to JSend spec.
-     */
-    public function testThrowsExceptionIfStatusInvalid()
-    {
-        $this->expectException(\JSend\InvalidJSendException::class);
-        new JSendResponse('');
+        JSendResponse::error('');
     }
 
     public function testSuccessHasCorrectStatus()
@@ -205,14 +196,14 @@ class JSendResponseTest extends TestCase
 
     public function test__toString()
     {
-        $success = new JSendResponse('success', $this->data);
-        $this->assertEquals($success->encode(), (string)$success);
+        $success_object = JSendResponse::success($this->data);
+        $this->assertEquals($success_object->encode(), (string)$success_object);
     }
 
     public function testJsonSerializable()
     {
-        $success = new JSendResponse('success', $this->data);
-        $this->assertEquals($success->encode(), json_encode($success));
+        $success_object = JSendResponse::success($this->data);
+        $this->assertEquals($success_object->encode(), json_encode($success_object));
     }
 
     public function testFailEncodesIdenticalJson()

@@ -10,14 +10,20 @@ RUN apt-get update && apt-get install --no-install-recommends -y -o Dpkg::Option
 
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 
+# php-xml, php-zip, php-mbstring and unzip are needed for composer
 RUN apt-get update && apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confnew" \
     curl \
     git \
     php-ast \
-    php7.2-cli \
-    php7.2-common \
-    php7.2-json \
-    php7.2-readline \
+    php7.4-cli \
+    php7.4-common \
+    php7.4-json \
+    php7.4-mbstring \
+    php7.4-readline \
+    php7.4-xdebug \
+    php7.4-xml \
+    php7.4-zip \
+    unzip \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Register the COMPOSER_HOME environment variable
@@ -34,6 +40,9 @@ RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
   && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
   && php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" \
   && php /tmp/composer-setup.php --no-ansi --install-dir=/usr/local/bin --filename=composer  && rm -rf /tmp/composer-setup.php
+
+# loosen up composer cache because other users need to access it later
+RUN mkdir -p /var/lib/composer/cache && chmod -R 777 /var/lib/composer/cache
 
 COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

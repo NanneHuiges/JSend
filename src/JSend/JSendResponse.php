@@ -6,6 +6,12 @@ use BadMethodCallException;
 use JsonSerializable;
 use UnexpectedValueException;
 
+/**
+ * Class JSendResponse
+ * @package JSend
+ *
+ * Implementation of the JSend specification
+ */
 class JSendResponse implements JsonSerializable
 {
     public const SUCCESS = 'success';
@@ -17,26 +23,20 @@ class JSendResponse implements JsonSerializable
     public const KEY_MESSAGE = 'message';
     public const KEY_CODE = 'code';
 
-    /** @var string */
-    protected $status;
-    /** @var array|null */
-    protected $data;
-    /** @var null|string */
-    protected $errorCode;
-    /** @var null|string */
-    protected $errorMessage;
-    /** @var int */
-    protected $jsonEncodeOptions = 0;
+
+    protected string $status;
+    protected ?array $data;
+    protected ?string $errorCode;
+    protected ?string $errorMessage;
+    protected int $jsonEncodeOptions = 0;
 
     /**
-     * From the spec:
-     * Description: All went well, and (usually) some data was returned.
-     * Required   :  data
+     * When an API call is successful, the JSend object is used as a simple envelope for the results.
      *
-     * @param array|null $data
+     * @param array|null $data Acts as the wrapper for any data returned by the API call.
+     *                         If the call returns no data (e.g. with a DELETE request), data should be set to null.
      *
      * @return JSendResponse
-     * @throws InvalidJSendException
      */
     public static function success(array $data = null): JSendResponse
     {
@@ -44,14 +44,14 @@ class JSendResponse implements JsonSerializable
     }
 
     /**
-     * From the spec:
-     * Description: There was a problem with the data submitted, or some pre-condition of the API call wasn't satisfied
-     * Required   : data
+     * When an API call is rejected due to invalid data or call conditions, the JSend object's data key contains an
+     * object explaining what went wrong, typically a hash of validation errors.
      *
-     * @param array|null $data
+     * @param array|null $data Again, provides the wrapper for the details of why the request failed. If the reasons for
+     *                         failure correspond to POST values, the response object's keys SHOULD correspond to those
+     *                         POST values.
      *
      * @return JSendResponse
-     * @throws InvalidJSendException
      */
     public static function fail(array $data = null): JSendResponse
     {
@@ -59,14 +59,13 @@ class JSendResponse implements JsonSerializable
     }
 
     /**
-     * From the spec:
-     * Description: An error occurred in processing the request, i.e. an exception was thrown
-     * Required   : errorMessage
-     * Optional   : errorCode, data
+     * When an API call fails due to an error on the server.
      *
-     * @param string $errorMessage
-     * @param string|null $errorCode
-     * @param array|null $data
+     * @param string $errorMessage A meaningful, end-user-readable (or at the least log-worthy) message, explaining
+     *                             what went wrong.
+     * @param string|null $errorCode A numeric code corresponding to the error, if applicable
+     * @param array|null $data A generic container for any other information about the error, i.e. the conditions that
+     *                         caused the error, stack traces, etc.
      *
      * @return JSendResponse
      *
@@ -78,7 +77,7 @@ class JSendResponse implements JsonSerializable
     }
 
     /**
-     * JSendResponse constructor.
+     * JSendResponse constructor. Please use provided functions for success, fail or error.
      *
      * @param string $status one of static::SUCCESS, static::FAIL, static::ERROR
      * @param array|null $data
@@ -87,7 +86,7 @@ class JSendResponse implements JsonSerializable
      *
      * @throws InvalidJSendException if status is not valid or status is error and empty($errorMessage) is true
      */
-    public function __construct(string $status, array $data = null, $errorMessage = null, $errorCode = null)
+    private function __construct(string $status, array $data = null, $errorMessage = null, $errorCode = null)
     {
         if (!$this->isStatusValid($status)) {
             throw new InvalidJSendException('Status does not conform to JSend spec.');
@@ -105,12 +104,19 @@ class JSendResponse implements JsonSerializable
         $this->data = $data;
     }
 
+    /**
+     * Getter for the status
+     *
+     * @return string
+     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
     /**
+     * Getter for the data
+     *
      * @return array|null
      */
     public function getData(): ?array
@@ -119,7 +125,10 @@ class JSendResponse implements JsonSerializable
     }
 
     /**
+     * Getter for the errormessage
+     *
      * @return null|string
+     * @throws BadMethodCallException when called on a non-error message
      */
     public function getErrorMessage(): ?string
     {
@@ -131,7 +140,10 @@ class JSendResponse implements JsonSerializable
     }
 
     /**
+     * Getter for the errorcode
+     *
      * @return null|string
+     * @throws BadMethodCallException when called on a non-error message
      */
     public function getErrorCode(): ?string
     {
@@ -142,6 +154,12 @@ class JSendResponse implements JsonSerializable
         throw new BadMethodCallException('Only responses with a status of error may have an error code.');
     }
 
+    /**
+     * Checks if the provided string is one of the valid statusses
+     *
+     * @param string $status
+     * @return bool
+     */
     protected function isStatusValid(string $status): bool
     {
         $validStatuses = array(static::SUCCESS, static::FAIL, static::ERROR);
@@ -149,16 +167,31 @@ class JSendResponse implements JsonSerializable
         return \in_array($status, $validStatuses, true);
     }
 
+    /**
+     * Check if this is a success object
+     *
+     * @return bool
+     */
     public function isSuccess(): bool
     {
         return $this->status === static::SUCCESS;
     }
 
+    /**
+     * Check if this is a fail object
+     *
+     * @return bool
+     */
     public function isFail(): bool
     {
         return $this->status === static::FAIL;
     }
 
+    /**
+     * Check if this is an error object
+     *
+     * @return bool
+     */
     public function isError(): bool
     {
         return $this->status === static::ERROR;
@@ -166,7 +199,8 @@ class JSendResponse implements JsonSerializable
 
     /**
      * Serializes the class into an array
-     * @return array the serialized array
+     *
+     * @return array the object as serialized array
      */
     public function asArray(): array
     {
@@ -192,7 +226,13 @@ class JSendResponse implements JsonSerializable
         return $theArray;
     }
 
-    public function setEncodingOptions($options): void
+    /**
+     * Sets the encoding options for json_encode.
+     * @see https://www.php.net/manual/en/function.json-encode.php
+     *
+     * @param $options
+     */
+    public function setEncodingOptions(int $options): void
     {
         $this->jsonEncodeOptions = $options;
     }
@@ -200,6 +240,7 @@ class JSendResponse implements JsonSerializable
 
     /**
      * Encodes the class into JSON
+     *
      * @return string the raw JSON
      */
     public function encode(): string
@@ -209,6 +250,7 @@ class JSendResponse implements JsonSerializable
 
     /**
      * Implements JsonSerializable interface
+     *
      * @return array
      */
     public function jsonSerialize()
@@ -217,6 +259,8 @@ class JSendResponse implements JsonSerializable
     }
 
     /**
+     * Simple to-string function that returns a (json) string for this object
+     *
      * @return string
      */
     public function __toString()
