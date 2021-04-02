@@ -9,27 +9,21 @@ use PHPUnit\Framework\TestCase;
  */
 class JSendResponseTest extends TestCase
 {
-    const SUCCESS = 'success';
-    const FAIL = 'fail';
-    const ERROR = 'error';
+    private const SUCCESS = 'success';
+    private const FAIL = 'fail';
+    private const ERROR = 'error';
 
-    protected $data;
-    protected $errorMessage;
-    protected $errorCode;
+    protected array $data;
+    protected string $errorMessage;
+    protected int $errorCode;
 
-    /** @var  JSendResponse */
-    protected $success;
-    /** @var  JSendResponse */
-    protected $fail;
-    /** @var  JSendResponse */
-    protected $error;
+    protected JSendResponse $success;
+    protected JSendResponse $fail;
+    protected JSendResponse $error;
 
-    /** @var  JSendResponse */
-    protected $successWithData;
-    /** @var  JSendResponse */
-    protected $failWithData;
-    /** @var  JSendResponse */
-    protected $errorWithData;
+    protected JSendResponse $successWithData;
+    protected JSendResponse $failWithData;
+    protected JSendResponse $errorWithData;
 
     protected function setUp(): void
     {
@@ -61,188 +55,191 @@ class JSendResponseTest extends TestCase
     /**
      * Trying to create an error without a message should throw an exception
      */
-    public function testCreatingErrorWithoutErrorMessageThrowsException()
+    public function testCreatingErrorWithoutErrorMessageThrowsException(): void
     {
         $this->expectException(\JSend\InvalidJSendException::class);
         new JSendResponse('error', array());
     }
 
     /**
-     * @expectedExceptionMessage Status does not conform to JSend spec.
+     * expected Exception: Status does not conform to JSend spec.
      */
-    public function testThrowsExceptionIfStatusInvalid()
+    public function testThrowsExceptionIfStatusInvalid(): void
     {
         $this->expectException(\JSend\InvalidJSendException::class);
+        $this->expectExceptionMessage('Status does not conform to JSend spec.');
         new JSendResponse('');
     }
 
-    public function testSuccessHasCorrectStatus()
+    public function testSuccessHasCorrectStatus(): void
     {
-        $this->assertEquals(self::SUCCESS, $this->success->getStatus());
-        $this->assertTrue($this->success->isSuccess());
+        self::assertEquals(self::SUCCESS, $this->success->getStatus());
+        self::assertTrue($this->success->isSuccess());
     }
 
-    public function testFailHasCorrectStatus()
+    public function testFailHasCorrectStatus(): void
     {
-        $this->assertEquals(self::FAIL, $this->fail->getStatus());
-        $this->assertTrue($this->fail->isFail());
+        self::assertEquals(self::FAIL, $this->fail->getStatus());
+        self::assertTrue($this->fail->isFail());
     }
 
-    public function testErrorHasCorrectStatus()
+    public function testErrorHasCorrectStatus(): void
     {
-        $this->assertEquals(self::ERROR, $this->error->getStatus());
-        $this->assertTrue($this->error->isError());
+        self::assertEquals(self::ERROR, $this->error->getStatus());
+        self::assertTrue($this->error->isError());
     }
 
-    public function testErrorHasCorrectMessage()
+    public function testErrorHasCorrectMessage(): void
     {
-        $this->assertEquals($this->errorMessage, $this->error->getErrorMessage());
+        self::assertEquals($this->errorMessage, $this->error->getErrorMessage());
     }
 
-    public function testErrorHasCorrectCode()
+    public function testErrorHasCorrectCode(): void
     {
-        $this->assertNull($this->error->getErrorCode());
-        $this->assertEquals($this->errorCode, $this->errorWithData->getErrorCode());
+        self::assertNull($this->error->getErrorCode());
+        self::assertEquals($this->errorCode, $this->errorWithData->getErrorCode());
     }
 
     /**
-     * @expectedExceptionMessage Only responses with a status of error may have an error message.
+     * expected Exception Message Only responses with a status of error may have an error message.
      */
-    public function testGetErrorMessageThrowsExceptionIfStatusNotError()
+    public function testGetErrorMessageThrowsExceptionIfStatusNotError(): void
     {
         $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('Only responses with a status of error may have an error message.');
         $this->success->getErrorMessage();
     }
 
     /**
-     * @expectedExceptionMessage Only responses with a status of error may have an error code.
+     * expected Exception Message Only responses with a status of error may have an error code.
      */
-    public function testGetErrorCodeThrowsExceptionIfStatusNotError()
+    public function testGetErrorCodeThrowsExceptionIfStatusNotError(): void
     {
         $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('Only responses with a status of error may have an error code.');
         $this->fail->getErrorCode();
     }
 
-    public function testResponseHasCorrectData()
+    public function testResponseHasCorrectData(): void
     {
-        $this->assertEquals($this->data, $this->successWithData->getData());
-        $this->assertEquals($this->data, $this->failWithData->getData());
-        $this->assertEquals($this->data, $this->errorWithData->getData());
+        self::assertEquals($this->data, $this->successWithData->getData());
+        self::assertEquals($this->data, $this->failWithData->getData());
+        self::assertEquals($this->data, $this->errorWithData->getData());
     }
 
-    public function testResponseEncodesValidJson()
+    public function testResponseEncodesValidJson(): void
     {
-        $this->assertNotNull($this->encodeAndDecode($this->success));
-        $this->assertNotNull($this->encodeAndDecode($this->fail));
-        $this->assertNotNull($this->encodeAndDecode($this->error));
+        self::assertNotNull($this->encodeAndDecode($this->success));
+        self::assertNotNull($this->encodeAndDecode($this->fail));
+        self::assertNotNull($this->encodeAndDecode($this->error));
 
-        $this->assertNotNull($this->encodeAndDecode($this->successWithData));
-        $this->assertNotNull($this->encodeAndDecode($this->failWithData));
-        $this->assertNotNull($this->encodeAndDecode($this->errorWithData));
+        self::assertNotNull($this->encodeAndDecode($this->successWithData));
+        self::assertNotNull($this->encodeAndDecode($this->failWithData));
+        self::assertNotNull($this->encodeAndDecode($this->errorWithData));
     }
 
-    public function testAsArrayHasCorrectData()
+    public function testAsArrayHasCorrectData(): void
     {
         $successAsArray = $this->success->asArray();
-        $this->assertEquals(
+        self::assertEquals(
             $this->success->getStatus(),
             $successAsArray['status']
         );
-        $this->assertEquals(
+        self::assertEquals(
             $this->success->getData(),
             $successAsArray['data']
         );
 
         $successWithDataAsArray = $this->successWithData->asArray();
-        $this->assertEquals(
+        self::assertEquals(
             $this->successWithData->getStatus(),
             $successWithDataAsArray['status']
         );
-        $this->assertEquals(
+        self::assertEquals(
             $this->successWithData->getData(),
             $successWithDataAsArray['data']
         );
 
         $successAsArray = $this->successWithData->asArray();
-        $this->assertEquals(
+        self::assertEquals(
             $this->successWithData->getStatus(),
             $successAsArray['status']
         );
-        $this->assertEquals(
+        self::assertEquals(
             $this->successWithData->getData(),
             $successAsArray['data']
         );
 
         $errorAsArray = $this->errorWithData->asArray();
-        $this->assertEquals(
+        self::assertEquals(
             $this->errorWithData->getStatus(),
             $errorAsArray['status']
         );
-        $this->assertEquals(
+        self::assertEquals(
             $this->errorWithData->getErrorMessage(),
             $errorAsArray['message']
         );
-        $this->assertEquals(
+        self::assertEquals(
             $this->errorWithData->getErrorCode(),
             $errorAsArray['code']
         );
-        $this->assertIsInt($errorAsArray['code']);
+        self::assertIsInt($errorAsArray['code']);
     }
 
-    public function testSuccessEncodesIdenticalJson()
+    public function testSuccessEncodesIdenticalJson(): void
     {
         // without data
         $decoded = $this->encodeAndDecode($this->success);
-        $this->assertEquals(self::SUCCESS, $decoded['status']);
-        $this->assertEquals(null, $decoded['data']);
-        $this->assertArrayNotHasKey('message', $decoded);
-        $this->assertArrayNotHasKey('code', $decoded);
+        self::assertEquals(self::SUCCESS, $decoded['status']);
+        self::assertEquals(null, $decoded['data']);
+        self::assertArrayNotHasKey('message', $decoded);
+        self::assertArrayNotHasKey('code', $decoded);
 
         // with data
         $decoded = $this->encodeAndDecode($this->successWithData);
-        $this->assertEquals($this->data, $decoded['data']);
+        self::assertEquals($this->data, $decoded['data']);
     }
 
-    public function test__toString()
+    public function test__toString(): void
     {
         $success = new JSendResponse('success', $this->data);
-        $this->assertEquals($success->encode(), (string)$success);
+        self::assertEquals($success->encode(), (string)$success);
     }
 
-    public function testJsonSerializable()
+    public function testJsonSerializable(): void
     {
         $success = new JSendResponse('success', $this->data);
-        $this->assertEquals($success->encode(), json_encode($success));
+        self::assertEquals($success->encode(), json_encode($success));
     }
 
-    public function testFailEncodesIdenticalJson()
+    public function testFailEncodesIdenticalJson(): void
     {
         // without data
         $decoded = $this->encodeAndDecode($this->fail);
-        $this->assertEquals(self::FAIL, $decoded['status']);
-        $this->assertEquals(null, $decoded['data']);
-        $this->assertArrayNotHasKey('message', $decoded);
-        $this->assertArrayNotHasKey('code', $decoded);
+        self::assertEquals(self::FAIL, $decoded['status']);
+        self::assertEquals(null, $decoded['data']);
+        self::assertArrayNotHasKey('message', $decoded);
+        self::assertArrayNotHasKey('code', $decoded);
 
         // with data
         $decoded = $this->encodeAndDecode($this->failWithData);
-        $this->assertEquals($this->data, $decoded['data']);
+        self::assertEquals($this->data, $decoded['data']);
     }
 
-    public function testErrorEncodesIdenticalJson()
+    public function testErrorEncodesIdenticalJson(): void
     {
         // without data
         $decoded = $this->encodeAndDecode($this->error);
-        $this->assertEquals(self::ERROR, $decoded['status']);
-        $this->assertArrayNotHasKey('data', $decoded);
-        $this->assertArrayNotHasKey('code', $decoded);
+        self::assertEquals(self::ERROR, $decoded['status']);
+        self::assertArrayNotHasKey('data', $decoded);
+        self::assertArrayNotHasKey('code', $decoded);
 
         // with data
         $decoded = $this->encodeAndDecode($this->errorWithData);
 
-        $this->assertEquals($this->data, $decoded['data']);
-        $this->assertEquals($this->errorMessage, $decoded['message']);
-        $this->assertEquals($this->errorCode, $decoded['code']);
+        self::assertEquals($this->data, $decoded['data']);
+        self::assertEquals($this->errorMessage, $decoded['message']);
+        self::assertEquals($this->errorCode, $decoded['code']);
     }
 
     protected function encodeAndDecode(JsendResponse $response)
@@ -252,18 +249,18 @@ class JSendResponseTest extends TestCase
         return json_decode($encoded, $decodeToAssocArrays);
     }
 
-    public function testEncodingResponseToJsonAndBackToResponseReturnsIdenticalClass()
+    public function testEncodingResponseToJsonAndBackToResponseReturnsIdenticalClass(): void
     {
-        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->success));
-        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->fail));
-        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->error));
+        self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->success));
+        self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->fail));
+        self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->error));
 
-        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->successWithData));
-        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->failWithData));
-        $this->assertTrue($this->isEncodedAndDecodedBackIdentical($this->errorWithData));
+        self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->successWithData));
+        self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->failWithData));
+        self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->errorWithData));
     }
 
-    protected function isEncodedAndDecodedBackIdentical(JSendResponse $jsend)
+    protected function isEncodedAndDecodedBackIdentical(JSendResponse $jsend): bool
     {
         $json = $jsend->encode();
         $recoded = JSendResponse::decode($json);
@@ -273,7 +270,7 @@ class JSendResponseTest extends TestCase
     /**
      * Test that we throw an invalid value exception on invalid json
      */
-    public function testDecodeInvalidJsonThrowsException()
+    public function testDecodeInvalidJsonThrowsException(): void
     {
         $this->expectException(\UnexpectedValueException::class);
         JSendResponse::decode('This is not valid JSON.');
@@ -283,7 +280,7 @@ class JSendResponseTest extends TestCase
      * The `""` string is valid JSON, but not valid for JSend.
      * It should not throw the same exception as invalid JSON.
      */
-    public function testDecodeEmptyStringThrowsRightException()
+    public function testDecodeEmptyStringThrowsRightException(): void
     {
         $this->expectException(\JSend\InvalidJSendException::class);
         JSendResponse::decode('""');
@@ -292,7 +289,7 @@ class JSendResponseTest extends TestCase
     /**
      * JSend must be an object with a valid status.
      */
-    public function testDecodeMissingStatusKeyThrowsException()
+    public function testDecodeMissingStatusKeyThrowsException(): void
     {
         $this->expectException(\JSend\InvalidJSendException::class);
         JSendResponse::decode('{ "not-status": "Status A OK!" }');
@@ -301,7 +298,7 @@ class JSendResponseTest extends TestCase
     /**
      * JSend must contain data unless it is an error.
      */
-    public function testDecodeDataKeyMustExistIfNotError()
+    public function testDecodeDataKeyMustExistIfNotError(): void
     {
         $this->expectException(\JSend\InvalidJSendException::class);
         JSendResponse::decode('{ "status": "success" }');
@@ -310,7 +307,7 @@ class JSendResponseTest extends TestCase
     /**
      * JSend errors must contain a message.
      */
-    public function testDecodeErrorMustHaveMessage()
+    public function testDecodeErrorMustHaveMessage(): void
     {
         $this->expectException(\JSend\InvalidJSendException::class);
         JSendResponse::decode('{ "status": "error" }');
@@ -326,7 +323,7 @@ class JSendResponseTest extends TestCase
      * become a single line of code.
      *
      */
-    public function testDecodeErrorAnEmptyStringShouldNotBeValid()
+    public function testDecodeErrorAnEmptyStringShouldNotBeValid(): void
     {
         $this->expectException(\JSend\InvalidJSendException::class);
         JSendResponse::decode('{ "status": "error", "message": "" }');
@@ -335,7 +332,7 @@ class JSendResponseTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRespondSendsJson()
+    public function testRespondSendsJson(): void
     {
         $this->expectOutputString($this->success->encode());
         $this->success->respond();
@@ -345,29 +342,29 @@ class JSendResponseTest extends TestCase
      * @runInSeparateProcess
      * @requires extension xdebug
      */
-    public function testRespondHasCorrectContentType()
+    public function testRespondHasCorrectContentType(): void
     {
         $this->expectOutputString($this->success->encode());
         $this->success->respond();
         $headers = xdebug_get_headers();
 
-        $this->assertNotEmpty($headers);
-        $this->assertContains('Content-Type: application/json', $headers);
+        self::assertNotEmpty($headers);
+        self::assertContains('Content-Type: application/json', $headers);
     }
 
-    public function testExtending()
+    public function testExtending(): void
     {
         $extended = Extended::success();
-        $this->assertInstanceOf('Extended', $extended);
+        self::assertInstanceOf('Extended', $extended);
     }
 
-    public function testAddingEncodeOptions()
+    public function testAddingEncodeOptions(): void
     {
         $success = JSendResponse::success(array('some' => 'data'));
         $success->setEncodingOptions(\JSON_PRETTY_PRINT);
         $result = $success->encode();
         $pretty = json_encode($success->asArray(), \JSON_PRETTY_PRINT);
-        $this->assertEquals($pretty, $result);
+        self::assertEquals($pretty, $result);
     }
 
 }
