@@ -13,11 +13,17 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update && apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confnew" \
     curl \
     git \
-    php-ast \
-    php7.2-cli \
-    php7.2-common \
-    php7.2-json \
-    php7.2-readline \
+    php7.4-ast \
+    php7.4-cli \
+    php7.4-common \
+    php7.4-json \
+    php7.4-mbstring \
+    php7.4-readline \
+    php7.4-xdebug \docker
+    php7.4-xml \
+    php7.4-zip \
+    unzip \
+    zip \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Register the COMPOSER_HOME environment variable

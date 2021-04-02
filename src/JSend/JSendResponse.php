@@ -17,16 +17,11 @@ class JSendResponse implements JsonSerializable
     public const KEY_MESSAGE = 'message';
     public const KEY_CODE = 'code';
 
-    /** @var string */
-    protected $status;
-    /** @var array|null */
-    protected $data;
-    /** @var null|string */
-    protected $errorCode;
-    /** @var null|string */
-    protected $errorMessage;
-    /** @var int */
-    protected $jsonEncodeOptions = 0;
+    protected string $status;
+    protected ?array $data;
+    protected ?string $errorCode;
+    protected ?string $errorMessage;
+    protected int $jsonEncodeOptions = 0;
 
     /**
      * From the spec:
@@ -211,7 +206,7 @@ class JSendResponse implements JsonSerializable
      * Implements JsonSerializable interface
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->asArray();
     }
