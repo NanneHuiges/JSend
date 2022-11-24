@@ -204,9 +204,9 @@ class JSendResponse implements JsonSerializable
 
     /**
      * Implements JsonSerializable interface
-     * @return array
+     * @return mixed
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
         return $this->asArray();
     }
