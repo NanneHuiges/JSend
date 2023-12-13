@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/NanneHuiges/JSend.svg)](https://travis-ci.org/NanneHuiges/JSend)  
+[![Build Status](https://travis-ci.com/NanneHuiges/JSend.svg)](https://travis-ci.com/NanneHuiges/JSend)  
 [![Code Climate](https://codeclimate.com/github/NanneHuiges/JSend/badges/gpa.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
 [![Issue Count](https://codeclimate.com/github/NanneHuiges/JSend/badges/issue_count.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
   
