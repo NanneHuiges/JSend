@@ -1,4 +1,8 @@
-[![Build Status](https://travis-ci.com/NanneHuiges/JSend.svg)](https://travis-ci.com/NanneHuiges/JSend)  
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpunit_php81.yml/badge.svg)
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpunit_php82.yml/badge.svg)
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpunit_php83.yml/badge.svg)
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpmd.yml/badge.svg)
+
 [![Code Climate](https://codeclimate.com/github/NanneHuiges/JSend/badges/gpa.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
 [![Issue Count](https://codeclimate.com/github/NanneHuiges/JSend/badges/issue_count.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
   
@@ -87,7 +91,7 @@ if ($response->isError()) {
 # Development
 For your convenience, there is a dockerfile with the right dependencies (php, composer) available. Please use those
 to run various things (composer, phpunit, etc). You will need `docker` and `docker-compose` installed, but you don't
-need `PHP` or `composer`.
+need `PHP` or `composer`. For different php versions, there are different entries in the docker-compose.
 
 ## Setting up your install
 Running `./install.sh` will run composer for you in a development container. It does some magic with a `.user.env`
@@ -107,7 +111,6 @@ These tests are run on the CI as well, but please make sure they don't fail befo
 
 ## Notes
 * Note that the `composer.lock` file is ignored. This is standard practice for libraries.
-* The current tests are done on php 7.2, but tests are for 7.3 and 7.4 as well
 
 # Credits
 The library was written by [Jamie Schembri](https://github.com/shkm). It has been transfered to the current account [Nanne Huiges](https://github.com/NanneHuiges) in december 2015.

@@ -1,27 +1,28 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
+ARG PHP_VERSION
+ENV TZ=Europe/Amsterdam
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confnew" \
-        ca-certificates \
-        gosu \
-        software-properties-common \
-        && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1nl.\2/" /etc/apt/sources.list
+
+RUN apt-get update && apt-get install -y \
+    gosu \
+    software-properties-common
 
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 
-RUN apt-get update && apt-get install --no-install-recommends -y -o Dpkg::Options::="--force-confnew" \
+RUN apt-get update && apt-get install -y -o Dpkg::Options::="--force-confnew" \
     curl \
     git \
-    php7.4-ast \
-    php7.4-cli \
-    php7.4-common \
-    php7.4-json \
-    php7.4-mbstring \
-    php7.4-readline \
-    php7.4-xdebug \docker
-    php7.4-xml \
-    php7.4-zip \
+    php$PHP_VERSION-ast \
+    php$PHP_VERSION-cli \
+    php$PHP_VERSION-mbstring \
+    php$PHP_VERSION-common \
+    php$PHP_VERSION-readline \
+    php$PHP_VERSION-xdebug \
+    php$PHP_VERSION-xml \
+    php$PHP_VERSION-zip \
     unzip \
     zip \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*

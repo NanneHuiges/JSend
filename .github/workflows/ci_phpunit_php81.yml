@@ -1,4 +1,4 @@
-name: CI-phpunit-php82
+name: CI-phpunit-php81
 
 on: [push]
 

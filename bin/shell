@@ -3,7 +3,7 @@
 cd "${BASH_SOURCE%/*}/.." || exit
 
 if [[ $# -eq 0 ]]; then
-  docker-compose run --rm jsend-dev bash
+  docker-compose run --rm jsend-dev-latest bash
 else
-  docker-compose run --rm jsend-dev bash -c "${@:1}"
+  docker-compose run --rm jsend-dev-latest bash -c "${@:1}"
 fi
