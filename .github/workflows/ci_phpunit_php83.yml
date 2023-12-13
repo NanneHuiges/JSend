@@ -1,0 +1,21 @@
+name: CI-phpunit-php82
+
+on: [push]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: php-actions/composer@v6
+
+      - name: PHPUnit Tests
+        uses: php-actions/phpunit@v3
+        with:
+          bootstrap: vendor/autoload.php
+          configuration: phpunit.xml
+#          args: --coverage-text
+          version: 9
+          php_version: "8.3"
