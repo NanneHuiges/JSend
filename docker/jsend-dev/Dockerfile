@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y -o Dpkg::Options::="--force-confnew" \
     git \
     php$PHP_VERSION-ast \
     php$PHP_VERSION-cli \
+    php$PHP_VERSION-curl \
     php$PHP_VERSION-mbstring \
     php$PHP_VERSION-common \
     php$PHP_VERSION-readline \

@@ -5,5 +5,5 @@ cd "${BASH_SOURCE%/*}/.." || exit
 if [[ $# -eq 0 ]]; then
   docker-compose run --rm jsend-dev-latest vendor/bin/phpunit
 else
-  docker-compose run --rm jsend-dev-latest composer "${@:1}"
+  docker-compose run --rm jsend-dev-latest vendor/bin/phpunit "${@:1}"
 fi
