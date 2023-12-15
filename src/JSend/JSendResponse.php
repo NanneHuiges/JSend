@@ -18,6 +18,7 @@ class JSendResponse implements JsonSerializable
     public const KEY_CODE = 'code';
 
     protected string $status;
+    /** @var array<mixed>|null  */
     protected ?array $data;
     protected ?string $errorCode;
     protected ?string $errorMessage;
@@ -28,7 +29,7 @@ class JSendResponse implements JsonSerializable
      * Description: All went well, and (usually) some data was returned.
      * Required   :  data
      *
-     * @param array|null $data
+     * @param array<mixed>|null $data
      *
      * @return JSendResponse
      * @throws InvalidJSendException
@@ -43,7 +44,7 @@ class JSendResponse implements JsonSerializable
      * Description: There was a problem with the data submitted, or some pre-condition of the API call wasn't satisfied
      * Required   : data
      *
-     * @param array|null $data
+     * @param array<mixed>|null $data
      *
      * @return JSendResponse
      * @throws InvalidJSendException
@@ -61,7 +62,7 @@ class JSendResponse implements JsonSerializable
      *
      * @param string $errorMessage
      * @param string|null $errorCode
-     * @param array|null $data
+     * @param array<mixed>|null $data
      *
      * @return JSendResponse
      *
@@ -76,13 +77,13 @@ class JSendResponse implements JsonSerializable
      * JSendResponse constructor.
      *
      * @param string $status one of static::SUCCESS, static::FAIL, static::ERROR
-     * @param array|null $data
+     * @param array<mixed>|null $data
      * @param string|null $errorMessage mandatory for errors
      * @param string|null $errorCode
      *
      * @throws InvalidJSendException if status is not valid or status is error and empty($errorMessage) is true
      */
-    public function __construct(string $status, array $data = null, $errorMessage = null, $errorCode = null)
+    final public function __construct(string $status, array $data = null, $errorMessage = null, $errorCode = null)
     {
         if (!$this->isStatusValid($status)) {
             throw new InvalidJSendException('Status does not conform to JSend spec.');
@@ -106,7 +107,7 @@ class JSendResponse implements JsonSerializable
     }
 
     /**
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function getData(): ?array
     {
@@ -161,7 +162,7 @@ class JSendResponse implements JsonSerializable
 
     /**
      * Serializes the class into an array
-     * @return array the serialized array
+     * @return array<mixed> the serialized array
      */
     public function asArray(): array
     {
@@ -187,7 +188,7 @@ class JSendResponse implements JsonSerializable
         return $theArray;
     }
 
-    public function setEncodingOptions($options): void
+    public function setEncodingOptions(int $options): void
     {
         $this->jsonEncodeOptions = $options;
     }
@@ -195,16 +196,16 @@ class JSendResponse implements JsonSerializable
 
     /**
      * Encodes the class into JSON
-     * @return string the raw JSON
+     * @return false|string the raw JSON
      */
-    public function encode(): string
+    public function encode(): false|string
     {
         return json_encode($this, $this->jsonEncodeOptions);
     }
 
     /**
      * Implements JsonSerializable interface
-     * @return array
+     * @return array<mixed>
      */
     public function jsonSerialize(): array
     {
@@ -216,7 +217,8 @@ class JSendResponse implements JsonSerializable
      */
     public function __toString()
     {
-        return $this->encode();
+        $encode = $this->encode();
+        return $encode===false ? "" : $encode;
     }
 
     /**
@@ -233,14 +235,14 @@ class JSendResponse implements JsonSerializable
      * Takes raw JSON (JSend) and builds it into a new JSendResponse
      *
      * @param string $json the raw JSON (JSend) to decode
-     * @param int $depth User specified recursion depth, defaults to 512
+     * @param int<1, max> $depth User specified recursion depth, defaults to 512
      * @param int $options Bitmask of JSON decode options.
      *
      * @return JSendResponse if JSON is invalid
      * @throws InvalidJSendException if JSend does not conform to spec
      * @see json_decode()
      */
-    public static function decode($json, $depth = 512, $options = 0): JSendResponse
+    public static function decode(string $json, int $depth = 512, int $options = 0): JSendResponse
     {
         $rawDecode = json_decode($json, true, $depth, $options);
 

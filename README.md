@@ -8,7 +8,7 @@
   
 [![Total Downloads](https://poser.pugx.org/nannehuiges/jsend/downloads)](https://packagist.org/packages/nannehuiges/jsend)  
 # JSend
-A simple PHP implementation of the [JSend specification](http://labs.omniti.com/labs/jsend).
+A simple PHP implementation of the [JSend specification](https://github.com/omniti-labs/jsend).
 
 ## Usage
 ```php

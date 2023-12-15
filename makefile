@@ -50,12 +50,12 @@ run:
 # Little bit of logic so that the container will be started if it is stopped
 # or do nothing if the container is running normally.
 	if [ -n "$(CONTAINER_EXISTS)" ]; then \
-		if [ -n  "$(CONTAINER_STOPPED)" ]; then \
-			docker rm $(CONTAINER_NAME); \
-			docker run -d -t -v $(MAKEFILE_DIR):/usr/src --rm --name $(CONTAINER_NAME) $(IMAGE_NAME); \
-		fi \
+	  if [ -n  "$(CONTAINER_STOPPED)" ]; then \
+	    docker rm $(CONTAINER_NAME); \
+	    docker run -d -t -v $(MAKEFILE_DIR):/usr/src --rm --name $(CONTAINER_NAME) $(IMAGE_NAME); \
+	  fi \
 	else \
-		docker run -d -t -v $(MAKEFILE_DIR):/usr/src --rm --name $(CONTAINER_NAME) $(IMAGE_NAME); \
+	  docker run -d -t -v $(MAKEFILE_DIR):/usr/src --rm --name $(CONTAINER_NAME) $(IMAGE_NAME); \
 	fi
 
 shell: | run
@@ -80,4 +80,4 @@ codeclimate: | run
 
 phpstan: | run
 # Runs phpstan on the PHP code
-	$(EXEC) vendor/bin/phpstan analyse -l 5 src
+	$(EXEC) vendor/bin/phpstan analyse -l 9 src
