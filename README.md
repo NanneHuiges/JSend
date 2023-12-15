@@ -1,10 +1,14 @@
-[![Build Status](https://travis-ci.org/NanneHuiges/JSend.svg)](https://travis-ci.org/NanneHuiges/JSend)  
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpunit_php81.yml/badge.svg)
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpunit_php82.yml/badge.svg)
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpunit_php83.yml/badge.svg)
+![Build Status](https://github.com/NanneHuiges/JSend/actions/workflows/ci_phpmd.yml/badge.svg)
+
 [![Code Climate](https://codeclimate.com/github/NanneHuiges/JSend/badges/gpa.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
 [![Issue Count](https://codeclimate.com/github/NanneHuiges/JSend/badges/issue_count.svg)](https://codeclimate.com/github/NanneHuiges/JSend)  
   
 [![Total Downloads](https://poser.pugx.org/nannehuiges/jsend/downloads)](https://packagist.org/packages/nannehuiges/jsend)  
 # JSend
-A simple PHP implementation of the [JSend specification](http://labs.omniti.com/labs/jsend).
+A simple PHP implementation of the [JSend specification](https://github.com/omniti-labs/jsend).
 
 ## Usage
 ```php
@@ -86,28 +90,40 @@ if ($response->isError()) {
 
 # Development
 For your convenience, there is a dockerfile with the right dependencies (php, composer) available. Please use those
-to run various things (composer, phpunit, etc). You will need `docker` and `docker-compose` installed, but you don't
-need `PHP` or `composer`.
+to run various things (composer, phpunit, etc). You will need `docker` installed, but you don't
+need `PHP` or `composer` or any of the other dependencies. 
 
-## Setting up your install
-Running `./install.sh` will run composer for you in a development container. It does some magic with a `.user.env`
-file that will make sure you run all the stuff as your local user. This will help with access to the generated files.
+## Setting up and using a local environment
 
-You can run `./bin/composer` if you want to do any `composer` things, like `composer update`. If that takes to long each 
-time, you can jump in a shell by using `./bin/shell`. This makes sure you always run your build (or test) commands in 
-the right environment.
+To start using the local environment for testing and debugging all you have to is open a shell in the root folder of where this project is checked out. Then run the following command.
 
-## Testing and code quality
-There are scripts in `/bin` to help you test for issues:
+```bash
+make build install
+```
+This command should be run occasionally to keep the local environment up to date. For instance when the composer dependencies are changed.
 
-* codeclimate: run various codeclimate checks, like phpcodesniffer, phan, etc. See `.codeclimate.yml`
-* phpunit: runs the testsuite
+### Using the shell
 
-These tests are run on the CI as well, but please make sure they don't fail before you do a PR
+To open a shell in the docker container run the following command.
+```bash
+make shell
+```
+Available commands are in `/bin`
+
+### Running the code quality tools locally
+
+We use a variety of tools to keep the code quality of the library high. To run one the tools you only need to run
+
+```bash
+make <tool_name>
+```
+Available tools:
+- `phpstan` [PHPStan](https://phpstan.org/) is static analyser tool that can detect various code issues.
+- `phpunit` [PHPUnit](https://phpunit.de/) is the unit testing framework we use for this library.
+- `codeclimate` [CodeClimate](https://codeclimate.com/github/NanneHuiges/JSend)
 
 ## Notes
-* Note that the `composer.lock` file is ignored. This is standard practice for libraries.
-* The current tests are done on php 7.2, but tests are for 7.3 and 7.4 as well
+* Note that the `composer.lock` file is ignored. 
 
 # Credits
 The library was written by [Jamie Schembri](https://github.com/shkm). It has been transfered to the current account [Nanne Huiges](https://github.com/NanneHuiges) in december 2015.

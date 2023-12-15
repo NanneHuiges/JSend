@@ -1,0 +1,21 @@
+name: CI-phpmd
+
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Composer install
+        uses: php-actions/composer@v6
+
+      - name: PHP Mess Detector
+        uses: php-actions/phpmd@v1
+        with:
+          php_version: 8.3
+          path: src/
+          output: text
+          ruleset: phpmd_ruleset.xml
