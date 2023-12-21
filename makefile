@@ -24,7 +24,7 @@ MAKEFILE_DIR :=  $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 IMAGE_NAME = jsend_dev_image$(PHP)
 CONTAINER_NAME = jsend_dev$(PHP)
 # shortens exec calls
-EXEC := docker exec $(CONTAINER_NAME)
+EXEC := docker exec $(CONTAINER_NAME) env TERM=xterm-256color script -q -c
 # Helper values for checking the state of the container
 CONTAINER_EXISTS := $(shell docker ps -a -q -f name=$(CONTAINER_NAME) 2> /dev/null)
 CONTAINER_STOPPED := $(shell docker ps -aq -f status=exited -f name=$(CONTAINER_NAME) 2> /dev/null)
@@ -66,7 +66,7 @@ shell: | run
 
 phpunit: | run
 # Runs phpunit on the PHP code
-	$(EXEC) ./vendor/bin/phpunit
+	$(EXEC) "./vendor/bin/phpunit"
 
 codeclimate: | run
 # Runs codeclimate. as it uses docker itself, it is best run from its own dockerfile
@@ -80,4 +80,8 @@ codeclimate: | run
 
 phpstan: | run
 # Runs phpstan on the PHP code
-	$(EXEC) vendor/bin/phpstan analyse -l 9 src
+	$(EXEC) "vendor/bin/phpstan analyse -l 9 src"
+
+rector: | run
+# dry-runs rector
+	$(EXEC) "vendor/bin/rector process --dry-run"

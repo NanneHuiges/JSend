@@ -1,0 +1,15 @@
+name: CI-rector
+
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Composer install
+        uses: php-actions/composer@v6
+
+      - run: vendor/bin/rector process --dry-run
