@@ -88,6 +88,10 @@ if ($response->isError()) {
 }
 ```
 
+## notes
+The `errorCode` is described in the standard as "A numeric code". This library returns the error code as a string, but it
+excepts both a string and an integer as that seems to be unclear from the standard.
+
 # Development
 For your convenience, there is a dockerfile with the right dependencies (php, composer) available. Please use those
 to run various things (composer, phpunit, etc). You will need `docker` installed, but you don't

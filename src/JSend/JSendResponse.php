@@ -270,8 +270,14 @@ class JSendResponse implements JsonSerializable
         if(! ($errorMessage === null || (is_string($errorMessage)))){
             throw new InvalidJSendException('JSend error message must be a string.');
         }
+        if(is_int($errorCode)){
+            // The stardard only says
+            // code: A numeric code corresponding to the error, if applicable
+            // Both integers
+            $errorCode = (string)$errorCode;
+        }
         if(! ($errorCode === null || (is_string($errorCode)))){
-            throw new InvalidJSendException('JSend error cod must be a string.');
+            throw new InvalidJSendException('JSend error code must be a string.');
         }
 
 

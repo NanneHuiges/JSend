@@ -24,6 +24,7 @@ class JSendResponseTest extends TestCase
     protected JSendResponse $successWithData;
     protected JSendResponse $failWithData;
     protected JSendResponse $errorWithData;
+    protected JSendResponse $errorWithDataCodeString;
 
     protected function setUp(): void
     {
@@ -48,6 +49,11 @@ class JSendResponseTest extends TestCase
         $this->errorWithData = JSendResponse::error(
             $this->errorMessage,
             $this->errorCode,
+            $this->data
+        );
+        $this->errorWithDataCodeString  = JSendResponse::error(
+            $this->errorMessage,
+            (string) $this->errorCode,
             $this->data
         );
     }
@@ -98,6 +104,7 @@ class JSendResponseTest extends TestCase
     {
         self::assertNull($this->error->getErrorCode());
         self::assertEquals($this->errorCode, $this->errorWithData->getErrorCode());
+        self::assertEquals($this->errorCode, $this->errorWithDataCodeString->getErrorCode());
     }
 
     /**
@@ -125,6 +132,7 @@ class JSendResponseTest extends TestCase
         self::assertEquals($this->data, $this->successWithData->getData());
         self::assertEquals($this->data, $this->failWithData->getData());
         self::assertEquals($this->data, $this->errorWithData->getData());
+        self::assertEquals($this->data, $this->errorWithDataCodeString->getData());
     }
 
     public function testResponseEncodesValidJson(): void
@@ -136,6 +144,7 @@ class JSendResponseTest extends TestCase
         self::assertNotNull($this->encodeAndDecode($this->successWithData));
         self::assertNotNull($this->encodeAndDecode($this->failWithData));
         self::assertNotNull($this->encodeAndDecode($this->errorWithData));
+        self::assertNotNull($this->encodeAndDecode($this->errorWithDataCodeString));
     }
 
     public function testAsArrayHasCorrectData(): void
@@ -184,6 +193,21 @@ class JSendResponseTest extends TestCase
             $errorAsArray['code']
         );
         self::assertIsInt($errorAsArray['code']);
+
+        $errorAsArray = $this->errorWithDataCodeString->asArray();
+        self::assertEquals(
+            $this->errorWithData->getStatus(),
+            $errorAsArray['status']
+        );
+        self::assertEquals(
+            $this->errorWithData->getErrorMessage(),
+            $errorAsArray['message']
+        );
+        self::assertEquals(
+            $this->errorWithData->getErrorCode(),
+            $errorAsArray['code']
+        );
+        self::assertIsInt($errorAsArray['code']); // we decode as an int, even if we provide a string
     }
 
     public function testSuccessEncodesIdenticalJson(): void
@@ -258,6 +282,8 @@ class JSendResponseTest extends TestCase
         self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->successWithData));
         self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->failWithData));
         self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->errorWithData));
+        self::assertTrue($this->isEncodedAndDecodedBackIdentical($this->errorWithDataCodeString));
+
     }
 
     protected function isEncodedAndDecodedBackIdentical(JSendResponse $jsend): bool
