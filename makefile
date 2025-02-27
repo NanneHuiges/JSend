@@ -80,4 +80,4 @@ codeclimate: | run
 
 phpstan: | run
 # Runs phpstan on the PHP code
-	$(EXEC) vendor/bin/phpstan analyse -l 9 src
+	$(EXEC) vendor/bin/phpstan analyse -l 10 src

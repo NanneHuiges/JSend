@@ -8,17 +8,17 @@ use UnexpectedValueException;
 
 class JSendResponse implements JsonSerializable
 {
-    public const SUCCESS = 'success';
-    public const FAIL = 'fail';
-    public const ERROR = 'error';
+    public const string SUCCESS = 'success';
+    public const string FAIL = 'fail';
+    public const string ERROR = 'error';
 
-    public const KEY_STATUS = 'status';
-    public const KEY_DATA = 'data';
-    public const KEY_MESSAGE = 'message';
-    public const KEY_CODE = 'code';
+    public const string KEY_STATUS = 'status';
+    public const string KEY_DATA = 'data';
+    public const string KEY_MESSAGE = 'message';
+    public const string KEY_CODE = 'code';
 
     protected string $status;
-    /** @var array<mixed>|null  */
+    /** @var mixed[]|null  */
     protected ?array $data;
     protected ?string $errorCode;
     protected ?string $errorMessage;
@@ -259,12 +259,30 @@ class JSendResponse implements JsonSerializable
         $errorMessage = $rawDecode[static::KEY_MESSAGE] ?? null;
         $errorCode = $rawDecode[static::KEY_CODE] ?? null;
 
+        // json decode gives us mixed type results, make sure we have the expected types
+        // this is rather overkill but helps us run phpstan at high levels.
+        if(!is_string($status)){
+            throw new InvalidJSendException('JSend status code must be a string.');
+        }
+        if(! ($data === null || (is_array($data)))){
+            throw new InvalidJSendException('JSend data must be an array.');
+        }
+        if(! ($errorMessage === null || (is_string($errorMessage)))){
+            throw new InvalidJSendException('JSend error message must be a string.');
+        }
+        if(! ($errorCode === null || (is_string($errorCode)))){
+            throw new InvalidJSendException('JSend error cod must be a string.');
+        }
+
+
+        // specific checks/validations
         if ($status === static::ERROR && $errorMessage === null) {
             throw new InvalidJSendException('JSend errors must contain a message.');
         }
         if ($status !== static::ERROR && !array_key_exists(static::KEY_DATA, $rawDecode)) {
             throw new InvalidJSendException('JSend must contain data unless it is an error.');
         }
+
 
         return new static($status, $data, $errorMessage, $errorCode);
     }
