@@ -7,6 +7,20 @@
 
     <rule ref="rulesets/codesize.xml">
         <exclude name="TooManyPublicMethods"/>
+        <exclude name="CyclomaticComplexity">
+            <properties>
+                <property name="exceptions">
+                    <value>JSend\JSendResponse::decode</value>
+                </property>
+            </properties>
+        </exclude>
+        <exclude name="NPathComplexity">
+            <properties>
+                <property name="exceptions">
+                    <value>JSend\JSendResponse::decode</value>
+                </property>
+            </properties>
+        </exclude>
     </rule>
 
     <rule ref="rulesets/codesize.xml/TooManyPublicMethods">

@@ -15,6 +15,6 @@ jobs:
       - name: PHPStan
         uses: php-actions/phpstan@v3
         with:
-          php_version: 8.1
+          php_version: 8.3
           path: src/
-          level: 9
+          level: 10
