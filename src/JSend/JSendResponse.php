@@ -34,7 +34,7 @@ class JSendResponse implements JsonSerializable
      * @return JSendResponse
      * @throws InvalidJSendException
      */
-    public static function success(array $data = null): JSendResponse
+    public static function success(?array $data = null): JSendResponse
     {
         return new static(static::SUCCESS, $data);
     }
@@ -49,7 +49,7 @@ class JSendResponse implements JsonSerializable
      * @return JSendResponse
      * @throws InvalidJSendException
      */
-    public static function fail(array $data = null): JSendResponse
+    public static function fail(?array $data = null): JSendResponse
     {
         return new static(static::FAIL, $data);
     }
@@ -68,7 +68,7 @@ class JSendResponse implements JsonSerializable
      *
      * @throws InvalidJSendException if empty($errorMessage) is true
      */
-    public static function error(string $errorMessage, string $errorCode = null, array $data = null): JSendResponse
+    public static function error(string $errorMessage, ?string $errorCode = null, ?array $data = null): JSendResponse
     {
         return new static(static::ERROR, $data, $errorMessage, $errorCode);
     }
@@ -83,7 +83,7 @@ class JSendResponse implements JsonSerializable
      *
      * @throws InvalidJSendException if status is not valid or status is error and empty($errorMessage) is true
      */
-    final public function __construct(string $status, array $data = null, $errorMessage = null, $errorCode = null)
+    final public function __construct(string $status, ?array $data = null, ?string $errorMessage = null, ?string $errorCode = null)
     {
         if (!$this->isStatusValid($status)) {
             throw new InvalidJSendException('Status does not conform to JSend spec.');
